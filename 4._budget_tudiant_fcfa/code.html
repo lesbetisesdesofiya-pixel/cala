@@ -1,0 +1,372 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Mon Budget Étudiant</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#c3c6ce",
+            "background": "#f8f9ff",
+            "surface-variant": "#d3e4fe",
+            "on-secondary-fixed": "#271900",
+            "primary": "#001428",
+            "surface-container-high": "#dce9ff",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#08274e",
+            "surface-dim": "#cbdbf5",
+            "tertiary-fixed": "#d6e3ff",
+            "on-background": "#0b1c30",
+            "inverse-primary": "#b0c9e8",
+            "surface": "#f8f9ff",
+            "primary-fixed": "#d1e4ff",
+            "surface-container-low": "#eff4ff",
+            "tertiary": "#00122d",
+            "primary-container": "#0f2942",
+            "on-secondary": "#ffffff",
+            "outline": "#74777e",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#314863",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container": "#e5eeff",
+            "secondary-fixed": "#ffdea9",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#ffba27",
+            "on-surface-variant": "#43474d",
+            "secondary": "#7d5800",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-secondary-container": "#6b4b00",
+            "secondary-container": "#ffb702",
+            "on-surface": "#0b1c30",
+            "on-tertiary-fixed": "#001b3d",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "on-primary-fixed": "#011d35",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#aec7f7",
+            "surface-bright": "#f8f9ff",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#7991af",
+            "inverse-surface": "#213145",
+            "on-tertiary-container": "#768fbb",
+            "error-container": "#ffdad6",
+            "surface-tint": "#49607c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "space-md": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-xl": "2rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center antialiased pb-24 selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top App Bar Component from Shared Schema -->
+<header class="w-full bg-surface shadow-sm sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-4 h-16 max-w-lg mx-auto">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-variant flex items-center justify-center bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of an optimistic young West African university student wearing a simple linen collar shirt, sitting in a bright sunlit modern campus library with laptop and study notes in the background, warmth and focus in his expression, soft realistic ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaF2mjH1eTXCxRFwiTdkh81gc6OWx9aR0zGko1vhMQ9MWFSuSqzXuCvZFTJkD3TJFYJrrDQuVfH7B8j1NbAhn1fEiJ1PwMMclP4mjgSIX7INf-U-j_Mc0qqr3Dq-SG6Z6r65AKezPV_r2nE5q-UnB3JrI2XCIVhB0Q-KxI8LDQRzuaK9EqzlFD66gOh_N6ycbldCCnA1tffae_vffMAdiC9DhlneOL_sb4tvtU6VKcr6DYugbSA1LiBw">
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-semibold text-primary block leading-none">Semestre 1</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wide">Campus Abidjan</span>
+</div>
+</div>
+<button aria-label="Notifications" class="w-10 h-10 rounded-xl flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary-container"></span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="w-full max-w-lg px-4 pt-4 flex flex-col space-y-4">
+<!-- Title & Month Selector Module -->
+<div class="flex items-center justify-between pt-1">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Mon Budget Étudiant</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Gestion sereine &amp; réaliste de tes bourses &amp; frais</p>
+</div>
+<div class="flex items-center space-x-1.5 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-3 py-1.5 shadow-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">Octobre 2024</span>
+<span class="material-symbols-outlined text-outline" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<!-- Grand Résumé Financier (Navy Surface Card) -->
+<div class="bg-primary-container text-surface rounded-2xl p-5 shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] border-t border-white/10 relative overflow-hidden">
+<!-- Decorative Glow Subtle Shape -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-surface-container-high/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-md text-label-md text-primary-fixed-dim uppercase tracking-wider font-semibold">Solde disponible restant</span>
+<span class="inline-flex items-center space-x-1 bg-surface-container/20 text-surface rounded-full px-2.5 py-0.5 font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+<span>Actualisé</span>
+</span>
+</div>
+<div class="flex items-baseline space-x-2 my-2">
+<span class="font-display text-display text-surface font-extrabold tracking-tight">38 500</span>
+<span class="font-headline-sm text-headline-sm font-bold text-secondary-container">FCFA</span>
+</div>
+<!-- Ligne de Flux Bento -->
+<div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/10">
+<!-- Entrées -->
+<div class="bg-surface-container-lowest/10 backdrop-blur-sm rounded-xl p-3 flex flex-col">
+<div class="flex items-center space-x-1.5 text-surface-variant mb-1">
+<span class="material-symbols-outlined text-emerald-300" data-icon="arrow_downward">arrow_downward</span>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim font-bold">Entrées</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-emerald-300">65 000 <span class="font-label-sm text-label-sm">FCFA</span></span>
+</div>
+<!-- Sorties -->
+<div class="bg-surface-container-lowest/10 backdrop-blur-sm rounded-xl p-3 flex flex-col">
+<div class="flex items-center space-x-1.5 text-surface-variant mb-1">
+<span class="material-symbols-outlined text-secondary-container" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim font-bold">Sorties</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-secondary-fixed-dim">26 500 <span class="font-label-sm text-label-sm">FCFA</span></span>
+</div>
+</div>
+</div>
+<!-- Jauge de Prévision Fin de Mois -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)]">
+<div class="flex items-start space-x-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed/50 flex items-center justify-center flex-shrink-0 text-on-secondary-fixed mt-0.5">
+<span class="material-symbols-outlined" data-icon="savings" data-weight="fill" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h2 class="font-label-lg text-label-lg font-bold text-primary">Prévision de fin de mois</h2>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-secondary font-bold">22 jours restants</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Tu devrais terminer le mois avec environ <span class="font-bold text-primary">12 000 FCFA</span> d'épargne.
+          </p>
+<!-- Visual Progress Bar -->
+<div class="w-full bg-surface-container rounded-full h-2.5 mt-3 overflow-hidden flex">
+<div class="bg-primary-container h-full rounded-full" style="width: 68%;"></div>
+<div class="bg-secondary-container h-full rounded-full" style="width: 32%;"></div>
+</div>
+<div class="flex justify-between items-center mt-1.5 font-label-sm text-label-sm text-outline">
+<span>Dépenses maîtrisées (41%)</span>
+<span class="text-secondary font-bold">Capacité d'épargne intacte</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Action Buttons -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<button class="flex items-center justify-center space-x-2 bg-emerald-700 hover:bg-emerald-800 text-on-primary h-12 rounded-xl font-label-lg text-label-lg font-semibold shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span>+ Entrée</span>
+</button>
+<button class="flex items-center justify-center space-x-2 bg-primary-container hover:bg-tertiary-container text-surface h-12 rounded-xl font-label-lg text-label-lg font-semibold shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="remove_circle">remove_circle</span>
+<span>- Dépense</span>
+</button>
+</div>
+<!-- Section Transactions & Dépenses Récurrentes -->
+<div class="pt-2">
+<div class="flex items-center justify-between mb-3 px-1">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary">Transactions &amp; Dépenses récurrentes</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Dépenses universitaires et apports réguliers</p>
+</div>
+<button class="font-label-md text-label-md font-bold text-secondary hover:underline">Voir tout</button>
+</div>
+<!-- Transaction List Cards -->
+<div class="space-y-2.5">
+<!-- Forfait Internet 25 Go -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined" data-icon="wifi">wifi</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-body-md text-body-md font-bold text-primary">Forfait Internet 25 Go</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-2 py-0.5 rounded-full font-bold">Data</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Récurrent • Renouvelé le 02 Oct</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-error block">-5 000</span>
+<span class="font-label-sm text-label-sm text-outline">FCFA</span>
+</div>
+</div>
+<!-- Aide des parents -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-body-md text-body-md font-bold text-primary">Aide des parents</span>
+<span class="bg-emerald-50 text-emerald-800 font-label-sm text-label-sm px-2 py-0.5 rounded-full font-bold">Orange Money</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Entrée récurrente • Reçu le 01 Oct</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-emerald-700 block">+40 000</span>
+<span class="font-label-sm text-label-sm text-outline">FCFA</span>
+</div>
+</div>
+<!-- Transports / Bus campus -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="directions_bus">directions_bus</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-body-md text-body-md font-bold text-primary">Transports / Bus campus</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Carte mensuelle • SOTRA / Woro-woro</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">-3 500</span>
+<span class="font-label-sm text-label-sm text-outline">FCFA</span>
+</div>
+</div>
+<!-- Photocopies & Fournitures -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-body-md text-body-md font-bold text-primary">Photocopies &amp; Fournitures</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Polycopiés Droit Civil • Kiosque amphi</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">-2 000</span>
+<span class="font-label-sm text-label-sm text-outline">FCFA</span>
+</div>
+</div>
+<!-- Repas resto universitaire -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-body-md text-body-md font-bold text-primary">Repas resto universitaire</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tickets restaurant CROU • Semaine</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">-6 000</span>
+<span class="font-label-sm text-label-sm text-outline">FCFA</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Student Tips Card (Contextual Assurance) -->
+<div class="bg-surface-container-low border border-surface-variant/50 rounded-2xl p-4 flex items-center space-x-3 my-2">
+<span class="material-symbols-outlined text-secondary" data-icon="lightbulb">lightbulb</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong class="text-primary font-semibold">Conseil étudiant :</strong> Garde toujours 5 000 FCFA d'urgence pour les impressions de dernière minute et les trajets d'examen.
+      </p>
+</div>
+</main>
+<!-- Bottom Navigation Bar from Shared Schema -->
+<!-- Target destination is 'Budget', which maps directly to the 4th item -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe max-w-lg mx-auto bg-surface-container-lowest shadow-md">
+<!-- Item 1: Notes -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="school">school</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Notes</span>
+</a>
+<!-- Item 2: Objectifs -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="calculate">calculate</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Objectifs</span>
+</a>
+<!-- Item 3: Devoirs -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Devoirs</span>
+</a>
+<!-- Item 4: Budget (ACTIVE STATE) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-3 py-1.5 transition-colors active:scale-95 duration-150 shadow-sm" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="account_balance_wallet" data-weight="fill" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Budget</span>
+</a>
+</nav>
+</body></html>

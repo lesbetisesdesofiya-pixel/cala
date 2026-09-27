@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Polices auto-hébergées (prioritaires, offline OK) ; Google Fonts reste en repli. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal; font-weight: 100 700;
+  font-display: swap;
+  src: url('./assets/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal; font-weight: 200 800;
+  font-display: swap;
+  src: url('./assets/fonts/plus-jakarta-sans.woff2') format('woff2');
+}
+
+body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal; font-style: normal;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block; vertical-align: middle; line-height: 1;
+  letter-spacing: normal; text-transform: none; white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+}
+.fill { font-variation-settings: 'FILL' 1 !important; }
+.navbtn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: .4rem .7rem; border-radius: .9rem; color: #43474d; font-size: 11px; font-weight: 700; min-width: 52px;
+}
+.navbtn.active { background: #ffb702; color: #271900; }
+.fade { animation: fade .22s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+input[type=range]::-webkit-slider-runnable-track { height: 8px; background: #e2e8f0; border-radius: 9999px; }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
+  background: #ffb702; border: 3px solid #0f2942; margin-top: -8px; cursor: pointer;
+}
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.dot-pulse { animation: dotp 1.6s infinite; }
+@keyframes dotp { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }

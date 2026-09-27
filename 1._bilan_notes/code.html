@@ -1,0 +1,333 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Tableau de bord académique - Terminale S</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#c3c6ce",
+            "background": "#f8f9ff",
+            "surface-variant": "#d3e4fe",
+            "on-secondary-fixed": "#271900",
+            "primary": "#001428",
+            "surface-container-high": "#dce9ff",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#08274e",
+            "surface-dim": "#cbdbf5",
+            "tertiary-fixed": "#d6e3ff",
+            "on-background": "#0b1c30",
+            "inverse-primary": "#b0c9e8",
+            "surface": "#f8f9ff",
+            "primary-fixed": "#d1e4ff",
+            "surface-container-low": "#eff4ff",
+            "tertiary": "#00122d",
+            "primary-container": "#0f2942",
+            "on-secondary": "#ffffff",
+            "outline": "#74777e",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#314863",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container": "#e5eeff",
+            "secondary-fixed": "#ffdea9",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#ffba27",
+            "on-surface-variant": "#43474d",
+            "secondary": "#7d5800",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-secondary-container": "#6b4b00",
+            "secondary-container": "#ffb702",
+            "on-surface": "#0b1c30",
+            "on-tertiary-fixed": "#001b3d",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "on-primary-fixed": "#011d35",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#aec7f7",
+            "surface-bright": "#f8f9ff",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#7991af",
+            "inverse-surface": "#213145",
+            "on-tertiary-container": "#768fbb",
+            "error-container": "#ffdad6",
+            "surface-tint": "#49607c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "space-md": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-xl": "2rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-28">
+<!-- Main Responsive Container Constraint -->
+<div class="max-w-lg mx-auto min-h-screen flex flex-col relative bg-background">
+<!-- TopAppBar (from Shared Components JSON) -->
+<header class="bg-surface dark:bg-surface border-b border-surface-variant/30 dark:border-surface-variant/10 shadow-sm dark:shadow-none flex justify-between items-center w-full px-4 h-16 max-w-lg mx-auto sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30 relative flex-shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a cheerful young female high school student with braided hair, warm confident smile, natural indoor soft window lighting, modern editorial school aesthetic with subtle deep navy and warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrHzJ9cXVAiOBOp0AH2yUAEA9-oqLqzJU6TNrf0OB_HY8KnG4biZ3-bcEB-3KTCXMQ1Zvk6nUdP48K-KKGnAFjrwovl7y0waUbIltmhm56dRhL2B-YOdlMCTS_lg1tj3NKUD4o4LZJzr_WUy0C_80d3rHS3Yq6ZCQz60ss4vfiTKM5yRXMW_iWXapov16ha_qsF_1udrcZiVbVRwxc7EvRJtluvMIKeyHaMtDmwFNqrhrNerIVM56ygw">
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary dark:text-primary-fixed">Semestre 1</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Lycée Condorcet</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notifications" class="w-10 h-10 rounded-xl flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Stream -->
+<main class="flex-1 px-4 pt-4 space-y-5 pb-28">
+<!-- Student Welcome Greeting & Quick Selector -->
+<section class="flex items-center justify-between">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold tracking-tight">Salut Amina 👋</h1>
+<p class="font-label-lg text-label-lg text-on-surface-variant font-medium">Terminale S • 2024-2025</p>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container border border-outline-variant/20 shadow-sm">
+<span class="font-label-md text-label-md text-primary font-bold">Semestre 1</span>
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="expand_more">expand_more</span>
+</div>
+</section>
+<!-- Primary GPA Highlight Card (Navy Accent Surface) -->
+<section class="relative overflow-hidden rounded-[24px] bg-primary-container text-on-primary p-5 shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] border-t border-white/10">
+<!-- Ambient Decorative Glow -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-secondary-container opacity-15 blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-md text-label-md text-on-primary-container font-semibold uppercase tracking-wider">Moyenne Générale</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-display text-display font-extrabold text-white tracking-tight">12,4</span>
+<span class="font-headline-sm text-headline-sm text-on-primary-container font-medium">/ 20</span>
+</div>
+<div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/20 border border-secondary-container/30 text-secondary-container font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span>En progression (+0.8)</span>
+</div>
+</div>
+<!-- Circular Metric Progress Display Ring -->
+<div class="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 72 72">
+<circle class="text-white/15 fill-none" cx="36" cy="36" r="30" stroke="currentColor" stroke-width="6"></circle>
+<!-- 12.4/20 = 62% of 188.5 circ = ~117 stroke-dasharray -->
+<circle class="text-secondary-container fill-none" cx="36" cy="36" r="30" stroke="currentColor" stroke-dasharray="188.5" stroke-dashoffset="71.6" stroke-linecap="round" stroke-width="6.5"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-headline-sm text-headline-sm font-extrabold text-white leading-none">62%</span>
+<span class="font-label-sm text-label-sm text-on-primary-container leading-none mt-0.5">cible</span>
+</div>
+</div>
+</div>
+<!-- Mini Analytics Bar -->
+<div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between font-label-sm text-label-sm text-on-primary-container"><div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="">Moyenne cible : <strong class="text-white font-bold">14,0 / 20</strong></span>
+</div>
+<div class="flex items-center gap-1">
+<span class="">Mention visée :</span>
+<span class="text-secondary-container font-bold">Assez Bien</span>
+</div></div>
+</section>
+<!-- Assistant AI Advisory Banner -->
+<section class="rounded-[20px] bg-secondary-fixed/50 border border-secondary-fixed-dim/40 p-4 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.04)] flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center flex-shrink-0 shadow-sm text-on-secondary-container">
+<span class="material-symbols-outlined text-[22px]" data-icon="lightbulb" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg font-bold text-on-secondary-fixed tracking-tight">Conseil IA personnalisé</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-bold">Priorité 1</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant font-medium leading-snug">
+            Renforce les <strong class="text-primary font-bold">Mathématiques (9,5/20)</strong> pour sécuriser ta mention ! Le coefficient 5 pèse sur ton semestre.
+          </p>
+</div>
+</section>
+<!-- Section: Matières & Notes -->
+<section class="space-y-3">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Matières &amp; Notes</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">4 matières</span>
+</div>
+<button class="font-label-md text-label-md text-primary font-bold hover:underline flex items-center gap-0.5">
+<span>Tout voir</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Grade Cards Grid / Bento Stack -->
+<div class="space-y-2.5">
+<!-- Card 1: Histoire-Géo -->
+<div class="rounded-[20px] bg-surface-container-lowest p-4 border border-surface-variant/40 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] flex items-center justify-between transition hover:shadow-md">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-low flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[24px]" data-icon="public">public</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Histoire-Géo</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Coefficient 3 • 3 devoirs</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">15,0<span class="text-sm font-normal text-on-surface-variant">/20</span></span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                Excellent
+              </span>
+</div>
+</div>
+<!-- Card 2: Anglais -->
+<div class="rounded-[20px] bg-surface-container-lowest p-4 border border-surface-variant/40 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] flex items-center justify-between transition hover:shadow-md">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-low flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[24px]" data-icon="translate">translate</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Anglais</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Coefficient 2 • 4 devoirs</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">14,5<span class="text-sm font-normal text-on-surface-variant">/20</span></span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                Très bien
+              </span>
+</div>
+</div>
+<!-- Card 3: Mathématiques (Alert Pill) -->
+<div class="rounded-[20px] bg-surface-container-lowest p-4 border-2 border-secondary-container/40 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.06)] flex items-center justify-between transition hover:shadow-md relative">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-2xl bg-secondary-fixed/50 flex items-center justify-center text-secondary font-bold">
+<span class="material-symbols-outlined text-[24px]" data-icon="functions">functions</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Mathématiques</h3>
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="priority_high">priority_high</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary font-semibold">Coefficient 5 • Majeure</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-headline-md text-headline-md font-extrabold text-error">9,5<span class="text-sm font-normal text-on-surface-variant">/20</span></span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold inline-flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]" data-icon="bolt">bolt</span>
+                À booster
+              </span>
+</div>
+</div>
+<!-- Card 4: Français -->
+<div class="rounded-[20px] bg-surface-container-lowest p-4 border border-surface-variant/40 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] flex items-center justify-between transition hover:shadow-md">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-low flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu_book">menu_book</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary">Français</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Coefficient 4 • 2 devoirs</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">11,5<span class="text-sm font-normal text-on-surface-variant">/20</span></span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-bold">
+                Passable
+              </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Button / Floating Bar within view for easy mobile reach -->
+<div class="fixed bottom-20 left-4 right-4 max-w-lg mx-auto z-40 pointer-events-auto">
+<button class="w-full h-12 rounded-xl bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-container font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] active:scale-98 transition duration-150 border border-secondary-container/40">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span class="">Ajouter une note</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (from Shared Components JSON: Active on 'Notes') -->
+<nav aria-label="Navigation principale" class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe max-w-lg mx-auto bg-surface-container-lowest dark:bg-surface-container border-t border-surface-variant/20 dark:border-surface-variant/10 shadow-[0_-4px_16px_-2px_rgba(15,41,66,0.05)] shadow-md dark:shadow-none">
+<!-- Tab 1: Notes (Active per prompt) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl px-3 py-1.5 transition-colors active:scale-95 duration-150" href="#notes">
+<span class="material-symbols-outlined text-[22px]" data-icon="school" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Notes</span>
+</a>
+<!-- Tab 2: Objectifs (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95 duration-150" href="#objectifs">
+<span class="material-symbols-outlined text-[22px]" data-icon="calculate">calculate</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Objectifs</span>
+</a>
+<!-- Tab 3: Devoirs (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95 duration-150" href="#devoirs">
+<span class="material-symbols-outlined text-[22px]" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Devoirs</span>
+</a>
+<!-- Tab 4: Budget (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95 duration-150" href="#budget">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Budget</span>
+</a>
+</nav>
+</div>
+
+
+</body></html>

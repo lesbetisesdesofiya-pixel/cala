@@ -1,0 +1,337 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Programmer un Devoir - Étudiant Planner</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#eff4ff",
+            "tertiary": "#00122d",
+            "outline-variant": "#c3c6ce",
+            "on-primary-fixed-variant": "#314863",
+            "tertiary-fixed": "#d6e3ff",
+            "primary-fixed-dim": "#b0c9e8",
+            "surface-tint": "#49607c",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "tertiary-fixed-dim": "#aec7f7",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#ffba27",
+            "surface": "#f8f9ff",
+            "primary": "#001428",
+            "primary-container": "#0f2942",
+            "surface-container": "#e5eeff",
+            "outline": "#74777e",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#d3e4fe",
+            "surface-variant": "#d3e4fe",
+            "on-secondary-container": "#6b4b00",
+            "on-surface-variant": "#43474d",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#001b3d",
+            "secondary": "#7d5800",
+            "surface-dim": "#cbdbf5",
+            "on-secondary-fixed": "#271900",
+            "tertiary-container": "#08274e",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#0b1c30",
+            "error-container": "#ffdad6",
+            "secondary-container": "#ffb702",
+            "background": "#f8f9ff",
+            "surface-bright": "#f8f9ff",
+            "on-primary-fixed": "#011d35",
+            "inverse-primary": "#b0c9e8",
+            "on-primary-container": "#7991af",
+            "secondary-fixed": "#ffdea9",
+            "surface-container-high": "#dce9ff",
+            "on-secondary-fixed-variant": "#5e4100",
+            "inverse-on-surface": "#eaf1ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#0b1c30",
+            "on-tertiary-container": "#768fbb",
+            "primary-fixed": "#d1e4ff",
+            "inverse-surface": "#213145"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-md": "1rem",
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen font-body-md text-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Mobile Task Shell Container (Focused linear journey without bottom global navbar) -->
+<div class="max-w-lg mx-auto min-h-screen flex flex-col bg-surface shadow-[0_4px_24px_-4px_rgba(15,41,66,0.06)] relative pb-10">
+<!-- Top Header Navigation Bar with Back Arrow -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md px-4 py-3 border-b border-surface-variant/30 flex items-center justify-between">
+<button aria-label="Retour" class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary active:scale-95 transition-all hover:bg-surface-container-high" type="button">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nouvelle Échéance</span>
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold">Programmer un Devoir</h1>
+</div>
+<button aria-label="Aide méthodologique" class="w-10 h-10 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+</button>
+</header>
+<!-- Content Form Container -->
+<main class="flex-1 px-4 py-5 space-y-6">
+<!-- Pédagogical Intro Hero Banner -->
+<section class="bg-surface-container-low rounded-2xl p-4 border border-surface-variant/50 relative overflow-hidden">
+<div class="flex items-start gap-3 relative z-10">
+<div class="w-9 h-9 rounded-xl bg-secondary-container/20 text-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h2 class="font-label-lg text-label-lg text-primary font-bold">Planification Sereine</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Planifie ton travail à l'avance pour éviter le stress de dernière minute. Chaque session préparée garantit une meilleure assimilation !
+            </p>
+</div>
+</div>
+</section>
+<!-- Form Inputs Group -->
+<form class="space-y-6" id="assignment-form" onsubmit="event.preventDefault();">
+<!-- 1. Sélecteur de type d'exercice -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant">Type d'exercice académique</label>
+<div class="grid grid-cols-3 gap-2 bg-surface-container p-1 rounded-2xl">
+<button class="py-2.5 px-2 rounded-xl font-label-md text-label-md text-center transition-all bg-surface-container-lowest text-primary shadow-sm font-bold flex flex-col items-center gap-1" id="tab-devoir" onclick="selectExerciseType('devoir')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+<span>Devoir / Exercice</span>
+</button>
+<button class="py-2.5 px-2 rounded-xl font-label-md text-label-md text-center transition-all text-on-surface-variant hover:text-primary font-semibold flex flex-col items-center gap-1" id="tab-expose" onclick="selectExerciseType('expose')" type="button">
+<span class="material-symbols-outlined text-[18px]">co_present</span>
+<span>Exposé individuel</span>
+</button>
+<button class="py-2.5 px-2 rounded-xl font-label-md text-label-md text-center transition-all text-on-surface-variant hover:text-primary font-semibold flex flex-col items-center gap-1" id="tab-examen" onclick="selectExerciseType('examen')" type="button">
+<span class="material-symbols-outlined text-[18px]">fact_check</span>
+<span>Révision Examen</span>
+</button>
+</div>
+</div>
+<!-- 2. Titre de l'épreuve / Sujet -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface-variant" for="assignment-title">Intitulé de l'épreuve ou du sujet</label>
+<div class="relative rounded-xl shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+</div>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-lowest border border-outline-variant/50 rounded-xl font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-outline/70" id="assignment-title" name="title" placeholder="ex: Devoir Surveillé - Chapitre Probabilités" type="text" value="Devoir Surveillé - Chapitre Probabilités">
+</div>
+</div>
+<!-- 3. Matière associée (Tags rapides) -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface-variant">Matière associée</label>
+<span class="font-label-sm text-label-sm text-secondary font-semibold cursor-pointer hover:underline">+ Autre</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="px-3.5 py-2 rounded-xl border font-label-md text-label-md transition-all border-primary-container bg-primary-container text-on-primary flex items-center gap-1.5 shadow-sm" onclick="selectSubject(this)" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+              Maths
+            </button>
+<button class="px-3.5 py-2 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-all flex items-center gap-1.5" onclick="selectSubject(this)" type="button">
+<span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+              Histoire-Géo
+            </button>
+<button class="px-3.5 py-2 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-all flex items-center gap-1.5" onclick="selectSubject(this)" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+              SVT
+            </button>
+<button class="px-3.5 py-2 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-all flex items-center gap-1.5" onclick="selectSubject(this)" type="button">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+              Anglais
+            </button>
+<button class="px-3.5 py-2 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-all flex items-center gap-1.5" onclick="selectSubject(this)" type="button">
+<span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span>
+              Philosophie
+            </button>
+</div>
+</div>
+<!-- 4. Date et Heure limite de remise avec calcul automatique -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant">Date et Heure limite de remise</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="relative bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[22px]">calendar_today</span>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Date d'échéance</div>
+<input class="p-0 border-0 text-primary font-bold font-body-md text-body-md focus:ring-0 bg-transparent" type="date" value="2025-05-16">
+</div>
+</div>
+</div>
+<div class="relative bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[22px]">schedule</span>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Heure limite</div>
+<input class="p-0 border-0 text-primary font-bold font-body-md text-body-md focus:ring-0 bg-transparent" type="time" value="14:00">
+</div>
+</div>
+</div>
+</div>
+<!-- Indicateur de délai calculé automatiquement -->
+<div class="flex items-center gap-2 bg-surface-container-high/60 px-3.5 py-2 rounded-xl border border-surface-variant/40">
+<span class="material-symbols-outlined text-primary text-[18px]">hourglass_top</span>
+<p class="font-body-sm text-body-sm text-primary">
+              Délai estimé : <strong class="font-bold text-primary">Dans 4 jours</strong> (Vendredi à 14h00)
+            </p>
+</div>
+</div>
+<!-- 5. Niveau de priorité avec guidance -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant">Niveau de priorité &amp; exigence</label>
+<div class="space-y-2">
+<!-- Faible -->
+<label class="flex items-center justify-between p-3 rounded-xl border border-outline-variant/30 bg-surface-container-lowest cursor-pointer hover:border-outline-variant transition-all">
+<div class="flex items-center gap-3">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="priority" type="radio" value="faible">
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Faible</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Devoir maison simple ou lecture préparatoire</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-2.5 py-0.5 rounded-full font-bold">Coef. 0.5</span>
+</label>
+<!-- Normale -->
+<label class="flex items-center justify-between p-3 rounded-xl border border-outline-variant/30 bg-surface-container-lowest cursor-pointer hover:border-outline-variant transition-all">
+<div class="flex items-center gap-3">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="priority" type="radio" value="normale">
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Normale</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Exercice noté ou compte-rendu de séance</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container text-primary px-2.5 py-0.5 rounded-full font-bold">Coef. 1</span>
+</label>
+<!-- Urgent / Haute priorité (sélectionné) -->
+<label class="flex items-center justify-between p-3 rounded-xl border-2 border-primary-container bg-surface-container-lowest cursor-pointer shadow-sm">
+<div class="flex items-center gap-3">
+<input checked="" class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="priority" type="radio" value="haute">
+<div>
+<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
+                    Urgent / Haute priorité
+                    <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Devoir coefficient élevé / Examen blanc surveillé</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed-variant px-2.5 py-0.5 rounded-full font-bold">Coef. 2.0</span>
+</label>
+</div>
+</div>
+<!-- 6. Objectif de note visé pour ce devoir -->
+
+<!-- 7. ENCART PÉDAGOGIQUE 'Conseil de Méthode & Révision' -->
+
+<!-- 7. ENCART PÉDAGOGIQUE 'Conseil de Méthode & Révision' -->
+<div class="bg-surface-container-lowest p-3.5 rounded-xl border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Activer rappel notification</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Recevoir un push 48h puis 2h avant la remise</div>
+</div>
+</div>
+<!-- Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="notification-switch" type="checkbox">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- 8. Options de rappel et Switch -->
+<div class="pt-2">
+<button class="w-full h-12 bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-container font-label-lg text-label-lg font-bold rounded-xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-[22px]">calendar_add_on</span>
+<span class="">Valider et ajouter à mon agenda</span>
+</button>
+<p class="text-center font-label-sm text-label-sm text-on-surface-variant mt-2">
+            L'épreuve sera synchronisée avec ton tableau de bord et tes objectifs semestriels.
+          </p>
+</div>
+</form>
+</main>
+</div>
+<script>
+    // Tab switching for exercise type
+    function selectExerciseType(type) {
+      const tabs = ['devoir', 'expose', 'examen'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (t === type) {
+          el.className = 'py-2.5 px-2 rounded-xl font-label-md text-label-md text-center transition-all bg-surface-container-lowest text-primary shadow-sm font-bold flex flex-col items-center gap-1';
+        } else {
+          el.className = 'py-2.5 px-2 rounded-xl font-label-md text-label-md text-center transition-all text-on-surface-variant hover:text-primary font-semibold flex flex-col items-center gap-1';
+        }
+      });
+    }
+
+    // Subject tag pill selection
+    function selectSubject(button) {
+      const parent = button.parentElement;
+      const buttons = parent.querySelectorAll('button');
+      buttons.forEach(b => {
+        b.className = 'px-3.5 py-2 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md transition-all flex items-center gap-1.5';
+      });
+      button.className = 'px-3.5 py-2 rounded-xl border font-label-md text-label-md transition-all border-primary-container bg-primary-container text-on-primary flex items-center gap-1.5 shadow-sm';
+    }
+  </script>
+
+
+</body></html>

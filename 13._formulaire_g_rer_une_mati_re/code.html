@@ -1,0 +1,477 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Ajouter ou Modifier une Matière</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS with Forms & Container-queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#d6e3ff",
+            "on-background": "#0b1c30",
+            "outline": "#74777e",
+            "on-tertiary-fixed": "#001b3d",
+            "inverse-surface": "#213145",
+            "surface": "#f8f9ff",
+            "background": "#f8f9ff",
+            "primary": "#001428",
+            "surface-container-low": "#eff4ff",
+            "surface-bright": "#f8f9ff",
+            "on-secondary-fixed": "#271900",
+            "surface-variant": "#d3e4fe",
+            "tertiary-fixed-dim": "#aec7f7",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#7991af",
+            "primary-container": "#0f2942",
+            "on-secondary-container": "#6b4b00",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-error": "#ffffff",
+            "surface-container": "#e5eeff",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-secondary": "#ffffff",
+            "on-primary-fixed-variant": "#314863",
+            "secondary-fixed-dim": "#ffba27",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#08274e",
+            "on-surface-variant": "#43474d",
+            "surface-container-high": "#dce9ff",
+            "secondary-fixed": "#ffdea9",
+            "on-tertiary-container": "#768fbb",
+            "secondary-container": "#ffb702",
+            "outline-variant": "#c3c6ce",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eaf1ff",
+            "on-primary-fixed": "#011d35",
+            "secondary": "#7d5800",
+            "on-surface": "#0b1c30",
+            "inverse-primary": "#b0c9e8",
+            "tertiary": "#00122d",
+            "primary-fixed": "#d1e4ff",
+            "surface-tint": "#49607c",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "surface-container-lowest": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "gutter-mobile": "0.75rem",
+            "gutter": "1rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Modal / Screen Wrapper: task-focused modal page (bottom navigation suppressed per semantic rules for focused task journeys) -->
+<div class="w-full max-w-lg mx-auto min-h-screen flex flex-col bg-surface-container-lowest shadow-2xl relative pb-10">
+<!-- Modal Header (Top App Bar Task Mode) -->
+<header class="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-surface-variant/30">
+<div class="flex items-center gap-3">
+<button aria-label="Annuler et retourner" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-primary text-[22px]">close</span>
+</button>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Configuration</span>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary" id="modal-title">Modifier la Matière</h1>
+</div>
+</div>
+<button class="font-label-lg text-label-lg font-semibold text-on-surface-variant hover:text-primary transition-colors px-2 py-1" type="button">
+        Annuler
+      </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-4 py-6 space-y-6">
+<!-- Dynamic Live Preview Bento Card -->
+<section class="bg-primary-container text-surface-container-lowest rounded-2xl p-5 shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] border-t border-white/10 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-36 h-36 bg-secondary-container/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-3 relative z-10">
+<span class="font-label-sm text-label-sm text-primary-fixed tracking-wider uppercase">Aperçu en direct</span>
+<span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-bold bg-secondary-container text-on-secondary-container" id="preview-badge">
+            Sciences
+          </span>
+</div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center text-primary-container shadow-md transition-all duration-300" id="preview-icon-container">
+<span class="material-symbols-outlined text-[30px]" id="preview-icon" style="font-variation-settings: 'FILL' 1;">calculate</span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-md text-headline-md text-surface-container-lowest truncate font-bold" id="preview-name">
+              Mathématiques
+            </h2>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-md text-label-md font-semibold text-secondary-fixed bg-surface-container-highest/20 px-2 py-0.5 rounded-md" id="preview-coef-tag">
+                Coefficient 4
+              </span>
+
+
+</div>
+</div>
+</div>
+</section>
+<!-- Form Inputs Container -->
+<form class="space-y-6" id="subject-form" onsubmit="event.preventDefault();">
+<!-- Field 1: Subject Name -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface-variant font-medium" for="subject-name">
+            Nom de la matière
+          </label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-xl border border-surface-variant/50 bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:border-primary-container focus:ring-4 focus:ring-primary-container/10 transition-all placeholder:text-outline-variant outline-none" id="subject-name" name="subject-name" placeholder="Ex: Mathématiques, Économie, SVT..." required="" type="text" value="Mathématiques">
+<div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</div>
+</div>
+</div>
+<!-- Field 2: Academic Icon Picker -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface-variant font-medium">
+              Icône académique
+            </label>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">9 icônes disponibles</span>
+</div>
+<div class="grid grid-cols-5 gap-2.5 p-3 bg-surface rounded-2xl border border-surface-variant/30">
+<!-- Icon 1 (Active) -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-primary-container bg-surface-container-lowest shadow-sm transition-all text-primary-container" data-icon-name="calculate" type="button">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface font-semibold">Maths</span>
+</button>
+<!-- Icon 2 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="science" type="button">
+<span class="material-symbols-outlined text-[24px]">science</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Physique</span>
+</button>
+<!-- Icon 3 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="biotech" type="button">
+<span class="material-symbols-outlined text-[24px]">biotech</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">SVT</span>
+</button>
+<!-- Icon 4 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="menu_book" type="button">
+<span class="material-symbols-outlined text-[24px]">menu_book</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Français</span>
+</button>
+<!-- Icon 5 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="language" type="button">
+<span class="material-symbols-outlined text-[24px]">language</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Langues</span>
+</button>
+<!-- Icon 6 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="account_balance" type="button">
+<span class="material-symbols-outlined text-[24px]">account_balance</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Histoire</span>
+</button>
+<!-- Icon 7 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="sports_soccer" type="button">
+<span class="material-symbols-outlined text-[24px]">sports_soccer</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">EPS</span>
+</button>
+<!-- Icon 8 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="terminal" type="button">
+<span class="material-symbols-outlined text-[24px]">terminal</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Info</span>
+</button>
+<!-- Icon 9 -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="trending_up" type="button">
+<span class="material-symbols-outlined text-[24px]">trending_up</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Éco</span>
+</button>
+<!-- Icon 10 (Custom / Other) -->
+<button class="icon-selector-btn flex flex-col items-center justify-center p-2.5 rounded-xl border border-transparent hover:bg-surface-container text-on-surface-variant transition-all" data-icon-name="palette" type="button">
+<span class="material-symbols-outlined text-[24px]">palette</span>
+<span class="font-label-sm text-[10px] mt-1 text-on-surface-variant">Arts</span>
+</button>
+</div>
+</div>
+<!-- Field 3: Group & Color Theme Badge -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant font-medium">
+            Groupe &amp; Pôle thématique
+          </label>
+<div class="flex flex-wrap gap-2">
+<button class="group-badge-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-secondary-container text-on-secondary-container border border-secondary-container shadow-sm active:scale-95 transition-all" type="button">
+              Sciences
+            </button>
+<button class="group-badge-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container text-on-surface border border-surface-variant/40 hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+              Lettres &amp; Philo
+            </button>
+<button class="group-badge-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container text-on-surface border border-surface-variant/40 hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+              Langues Vivantes
+            </button>
+<button class="group-badge-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container text-on-surface border border-surface-variant/40 hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+              Tronc commun
+            </button>
+<button class="group-badge-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container text-on-surface border border-surface-variant/40 hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+              Option facultative
+            </button>
+</div>
+</div>
+<!-- Field 4: Coefficient Stepper & Input -->
+<div class="space-y-2 bg-surface-container-low rounded-2xl p-4 border border-surface-variant/30">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md font-semibold text-primary block">Coefficient de la matière</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Impacte la moyenne générale pondérée</span>
+</div>
+<div class="px-2 py-0.5 rounded-md bg-secondary-container/20 text-secondary font-label-sm text-label-sm font-bold">
+              Échelle 1 - 12
+            </div>
+</div>
+<div class="flex items-center justify-between gap-4 pt-2">
+<div class="flex items-center bg-surface-container-lowest rounded-xl border border-surface-variant/50 p-1 shadow-sm">
+<button aria-label="Diminuer le coefficient" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container active:scale-90 transition-all" id="btn-decrement" type="button">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<input class="w-14 text-center font-headline-sm text-headline-sm font-bold text-primary border-none p-0 focus:ring-0 focus:outline-none bg-transparent" id="coefficient-input" max="15" min="1" type="number" value="4">
+<button aria-label="Augmenter le coefficient" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container active:scale-90 transition-all" id="btn-increment" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Quick Coefficient Presets -->
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant mr-1">Raccourcis:</span>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors" onclick="setCoef(2)" type="button">x2</button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors" onclick="setCoef(4)" type="button">x4</button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors" onclick="setCoef(6)" type="button">x6</button>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 text-xs leading-relaxed">
+            Le coefficient détermine le poids de la matière dans le calcul automatique de ta moyenne et ton positionnement pour les mentions.
+          </p>
+</div>
+<!-- Bento Informational Card: Anticipated Impact -->
+<div class="p-4 rounded-2xl bg-surface border border-surface-variant/40 flex items-start gap-3.5">
+<div class="w-9 h-9 rounded-xl bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">auto_graph</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-primary">Impact prévisionnel</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Cette matière sera automatiquement synchronisée avec ton relevé de notes, ton carnet de devoirs et le simulateur d'admission.
+            </p>
+</div>
+</div>
+<!-- Primary Action Callouts -->
+<div class="pt-2 space-y-3">
+<!-- Primary CTA Button (Solar Amber) -->
+<button class="w-full h-12 bg-secondary-container text-on-secondary-fixed font-headline-sm text-headline-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_16px_-2px_rgba(255,183,2,0.4)] hover:brightness-105 active:scale-[0.98] transition-all" id="save-btn" type="submit">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Enregistrer la matière
+          </button>
+<!-- Secondary / Danger Action: Delete Subject -->
+<div class="pt-2 flex justify-center">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-error hover:bg-error-container/40 active:scale-95 transition-all font-label-lg text-label-lg font-semibold" id="delete-trigger-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+              Supprimer cette matière
+            </button>
+</div>
+</div>
+</form>
+</main>
+<!-- Modal Confirmation for Deletion (Overlay Drawer) -->
+<div class="fixed inset-0 z-50 bg-primary/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" id="delete-modal">
+<div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-surface-variant/20 transform translate-y-4 transition-transform duration-200" id="delete-modal-box">
+<div class="w-12 h-12 rounded-full bg-error-container text-error flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-[28px]">warning</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-center text-on-surface">Supprimer cette matière ?</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center mt-2 mb-6">
+          Toutes les notes et devoirs associés à <span class="font-bold text-primary" id="delete-subject-label">Mathématiques</span> seront définitivement supprimés du semestre 1.
+        </p>
+<div class="grid grid-cols-2 gap-3">
+<button class="h-11 rounded-xl bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold hover:bg-surface-container-high transition-colors" id="cancel-delete-btn" type="button">
+            Annuler
+          </button>
+<button class="h-11 rounded-xl bg-error text-on-error font-label-lg text-label-lg font-semibold hover:brightness-110 shadow-md transition-all" id="confirm-delete-btn" type="button">
+            Confirmer
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript logic for dynamic real-time synchronization -->
+<script>
+    // Live Name Sync
+    const nameInput = document.getElementById('subject-name');
+    const previewName = document.getElementById('preview-name');
+    const deleteSubjectLabel = document.getElementById('delete-subject-label');
+
+    nameInput.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      previewName.textContent = val || 'Nouvelle Matière';
+      deleteSubjectLabel.textContent = val || 'cette matière';
+    });
+
+    // Live Icon Picker Sync
+    const iconButtons = document.querySelectorAll('.icon-selector-btn');
+    const previewIcon = document.getElementById('preview-icon');
+
+    iconButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Reset styles
+        iconButtons.forEach(b => {
+          b.classList.remove('border-2', 'border-primary-container', 'bg-surface-container-lowest', 'shadow-sm', 'text-primary-container');
+          b.classList.add('border-transparent', 'text-on-surface-variant');
+          const span = b.querySelector('.material-symbols-outlined');
+          if (span) span.removeAttribute('style');
+        });
+
+        // Activate clicked
+        btn.classList.add('border-2', 'border-primary-container', 'bg-surface-container-lowest', 'shadow-sm', 'text-primary-container');
+        btn.classList.remove('border-transparent', 'text-on-surface-variant');
+        const iconSpan = btn.querySelector('.material-symbols-outlined');
+        if (iconSpan) iconSpan.setAttribute('style', "font-variation-settings: 'FILL' 1;");
+
+        const iconName = btn.getAttribute('data-icon-name');
+        previewIcon.textContent = iconName;
+      });
+    });
+
+    // Group Badge Selection
+    const groupBadges = document.querySelectorAll('.group-badge-btn');
+    const previewBadge = document.getElementById('preview-badge');
+
+    groupBadges.forEach(badge => {
+      badge.addEventListener('click', () => {
+        groupBadges.forEach(b => {
+          b.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'border-secondary-container', 'shadow-sm');
+          b.classList.add('bg-surface-container', 'text-on-surface', 'border-surface-variant/40');
+        });
+        badge.classList.add('bg-secondary-container', 'text-on-secondary-container', 'border-secondary-container', 'shadow-sm');
+        badge.classList.remove('bg-surface-container', 'text-on-surface', 'border-surface-variant/40');
+        previewBadge.textContent = badge.textContent.trim();
+      });
+    });
+
+    // Coefficient Stepper Logic
+    const coefInput = document.getElementById('coefficient-input');
+    const previewCoefTag = document.getElementById('preview-coef-tag');
+    const btnDecrement = document.getElementById('btn-decrement');
+    const btnIncrement = document.getElementById('btn-increment');
+
+    function updateCoefDisplay(val) {
+      const num = Math.max(1, Math.min(15, parseInt(val, 10) || 1));
+      coefInput.value = num;
+      previewCoefTag.textContent = `Coefficient ${num}`;
+    }
+
+    function setCoef(num) {
+      updateCoefDisplay(num);
+    }
+
+    btnDecrement.addEventListener('click', () => {
+      let current = parseInt(coefInput.value, 10) || 1;
+      updateCoefDisplay(current - 1);
+    });
+
+    btnIncrement.addEventListener('click', () => {
+      let current = parseInt(coefInput.value, 10) || 1;
+      updateCoefDisplay(current + 1);
+    });
+
+    coefInput.addEventListener('change', (e) => {
+      updateCoefDisplay(e.target.value);
+    });
+
+    // Delete Modal Handling
+    const deleteTriggerBtn = document.getElementById('delete-trigger-btn');
+    const deleteModal = document.getElementById('delete-modal');
+    const deleteModalBox = document.getElementById('delete-modal-box');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+    function openDeleteModal() {
+      deleteModal.classList.remove('opacity-0', 'pointer-events-none');
+      deleteModalBox.classList.remove('translate-y-4');
+    }
+
+    function closeDeleteModal() {
+      deleteModal.classList.add('opacity-0', 'pointer-events-none');
+      deleteModalBox.classList.add('translate-y-4');
+    }
+
+    deleteTriggerBtn.addEventListener('click', openDeleteModal);
+    cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    confirmDeleteBtn.addEventListener('click', () => {
+      closeDeleteModal();
+      alert('La matière a été supprimée avec succès.');
+    });
+
+    // Save Feedback Toast Effect
+    const form = document.getElementById('subject-form');
+    form.addEventListener('submit', () => {
+      const saveBtn = document.getElementById('save-btn');
+      const originalText = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[22px]">progress_activity</span> Enregistrement...';
+      saveBtn.disabled = true;
+
+      setTimeout(() => {
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[22px]">check</span> Enregistré !';
+        saveBtn.classList.replace('bg-secondary-container', 'bg-surface-container');
+        setTimeout(() => {
+          saveBtn.innerHTML = originalText;
+          saveBtn.classList.replace('bg-surface-container', 'bg-secondary-container');
+          saveBtn.disabled = false;
+        }, 1200);
+      }, 700);
+    });
+  </script>
+
+
+</body></html>

@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+# dist commité volontairement : le VPS sert le build tel quel (pas de Node).
+# dist
+dist-ssr
+*.local
+# clé publique write-only PostHog (baked dans le bundle de toute façon) :
+# commitée pour que `npm run dev` marche après un clone.
+# .env
+.env.*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,352 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Simulateur &amp; Prévisions d'Objectifs</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#c3c6ce",
+            "background": "#f8f9ff",
+            "surface-variant": "#d3e4fe",
+            "on-secondary-fixed": "#271900",
+            "primary": "#001428",
+            "surface-container-high": "#dce9ff",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#08274e",
+            "surface-dim": "#cbdbf5",
+            "tertiary-fixed": "#d6e3ff",
+            "on-background": "#0b1c30",
+            "inverse-primary": "#b0c9e8",
+            "surface": "#f8f9ff",
+            "primary-fixed": "#d1e4ff",
+            "surface-container-low": "#eff4ff",
+            "tertiary": "#00122d",
+            "primary-container": "#0f2942",
+            "on-secondary": "#ffffff",
+            "outline": "#74777e",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#314863",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container": "#e5eeff",
+            "secondary-fixed": "#ffdea9",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#ffba27",
+            "on-surface-variant": "#43474d",
+            "secondary": "#7d5800",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-secondary-container": "#6b4b00",
+            "secondary-container": "#ffb702",
+            "on-surface": "#0b1c30",
+            "on-tertiary-fixed": "#001b3d",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "on-primary-fixed": "#011d35",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#aec7f7",
+            "surface-bright": "#f8f9ff",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#7991af",
+            "inverse-surface": "#213145",
+            "on-tertiary-container": "#768fbb",
+            "error-container": "#ffdad6",
+            "surface-tint": "#49607c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "space-md": "1rem",
+            "gutter-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-xl": "2rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: #ffb702;
+      border: 3px solid #0f2942;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -8px;
+      box-shadow: 0 4px 10px rgba(15, 41, 66, 0.25);
+      transition: transform 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container pb-24">
+<!-- Top App Bar (Shared Component Anchor) -->
+<header class="bg-surface dark:bg-surface border-b border-surface-variant/30 dark:border-surface-variant/10 shadow-sm dark:shadow-none sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-4 h-16 max-w-lg mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary-container text-white flex items-center justify-center font-headline-sm text-headline-sm font-bold shadow-sm">
+<img class="w-full h-full rounded-full object-cover" data-alt="A portrait photo of a university student smiling warmly against a bright neutral campus library background. The aesthetic is clean and academic with soft directional lighting, deep navy tones, and calm ambient daylight reflecting student focus and optimism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjp2dqJXiDdR7kW7wAVBDMhnLzhNtriWM5XGH5zrb52fgFEkUgIMiKibcKTT2po42xc61-lu_CI0JSUvH0wWF9nxPsVaJUvjWaE0Ty8mdJvSOKM0PewcThuOCvwxGp_AHfcTyrFY30VAFbJH7QokzF5JF5lE5Rw3VMuXUeXkiFVTULM3iYi91bAHfUZCIGb2d1bG4KMz0MpCy5x4mKGqx_5hkS36qv9Vz3yr5c2e3QjkQmJzY4a2w3iQ">
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-semibold text-primary dark:text-primary-fixed">Semestre 1</span>
+<span class="block text-[10px] text-on-surface-variant font-medium">Lycée Condorcet • Terminale</span>
+</div>
+</div>
+<button aria-label="Notifications" class="w-10 h-10 rounded-full flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Container -->
+<main class="w-full max-w-lg mx-auto px-4 pt-4 flex-1 flex flex-col gap-5">
+<!-- Title Section -->
+<div class="space-y-1">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary text-[11px] font-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="calculate" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calculate</span>
+        SIMULATEUR PRÉDICTIF
+      </div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary tracking-tight">Simulateur d'Objectif</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Calcule exactement ce qu'il te faut pour atteindre ta mention</p>
+</div>
+<!-- Simulator Interactive Card -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 border border-primary/5 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] relative overflow-hidden">
+<!-- Ambient Decorative Backdrop Glow -->
+<div class="absolute -right-8 -top-8 w-28 h-28 bg-secondary-container/15 rounded-full blur-2xl pointer-events-none"></div>
+<div class="grid grid-cols-2 gap-3 pb-5 border-b border-surface-container">
+<!-- Current Grade -->
+<div class="bg-surface-container-low p-3.5 rounded-xl flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Note actuelle</span>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-display text-display text-primary font-extrabold tracking-tight">12,4</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">/ 20</span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant mt-1 font-medium">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span> Moyenne globale
+          </span>
+</div>
+<!-- Target Grade -->
+<div class="bg-primary-container text-white p-3.5 rounded-xl flex flex-col justify-between relative shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] border-t border-white/10">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider">Cible souhaitée</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed text-[10px] font-bold">Mention Bien</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-display text-display text-secondary-container font-extrabold tracking-tight" id="targetValueDisplay">14,0</span>
+<span class="font-label-md text-label-md text-primary-fixed-dim font-medium">/ 20</span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] text-primary-fixed font-medium mt-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-container" data-icon="trending_up">trending_up</span>
+            Écart : +1,6 pt requis
+          </span>
+</div>
+</div>
+<!-- Slider Component -->
+<div class="pt-5 space-y-3">
+<div class="flex justify-between items-center text-xs font-label-md font-semibold text-primary">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary" data-icon="tune">tune</span>
+            Ajuster la note cible
+          </span>
+<span class="text-secondary font-bold">Échelle : 12,5 à 18,0</span>
+</div>
+<div class="relative py-1">
+<input aria-label="Cible souhaitée réglable" class="focus:outline-none z-10 relative" id="gradeSlider" max="18.0" min="12.5" oninput="document.getElementById('targetValueDisplay').innerText = parseFloat(this.value).toFixed(1).replace('.', ',');" step="0.1" type="range" value="14.0">
+<div class="flex justify-between text-[11px] font-medium text-on-surface-variant mt-1.5 px-0.5">
+<span>12,5</span>
+<span>14,0 (Bien)</span>
+<span>16,0 (Très Bien)</span>
+<span>18,0</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommendation Box -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 border border-primary/5 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-xl">🎯</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Plan d'action pour passer de 12,4 à 14,0 :</h2>
+</div>
+</div>
+<!-- Action Items Bento / Stack -->
+<div class="space-y-2.5">
+<!-- Item 1: Anglais -->
+<div class="p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-variant flex items-center justify-center text-primary mt-0.5 flex-shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="language">language</span>
+</div>
+<div>
+<div class="font-headline-sm text-[15px] font-bold text-primary">Anglais</div>
+<p class="font-body-md text-body-md text-on-surface">Vise 16/20 au prochain devoir</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs font-bold whitespace-nowrap">
+            Gain : +0,4 pt
+          </span>
+</div>
+<!-- Item 2: Histoire-Géo -->
+<div class="p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-variant flex items-center justify-center text-primary mt-0.5 flex-shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="public">public</span>
+</div>
+<div>
+<div class="font-headline-sm text-[15px] font-bold text-primary">Histoire-Géo</div>
+<p class="font-body-md text-body-md text-on-surface">Maintiens 15/20 sur l'exposé</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-high text-primary text-xs font-bold whitespace-nowrap">
+            Gain : +0,3 pt
+          </span>
+</div>
+<!-- Item 3: Mathématiques -->
+<div class="p-3.5 rounded-xl bg-primary-container/5 border border-primary/10 flex items-start justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mt-0.5 flex-shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="functions">functions</span>
+</div>
+<div>
+<div class="font-headline-sm text-[15px] font-bold text-primary flex items-center gap-1.5">
+                Mathématiques
+                <span class="text-[10px] bg-secondary-container/30 text-on-secondary-container font-extrabold px-1.5 py-0.5 rounded">Priorité</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Obtenir au moins 13/20 au devoir surveillé n°3</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-container text-white text-xs font-bold whitespace-nowrap">
+            Effort clé : +0,9 pt
+          </span>
+</div>
+</div>
+</section>
+<!-- Feasibility Summary Card -->
+<section class="bg-surface-container-lowest rounded-2xl p-4 border border-primary/5 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)]">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Faisabilité : 85% - Très réaliste avec 3 devoirs ciblés</span>
+</div>
+</div>
+<!-- Progress Bar Track -->
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full transition-all duration-500 ease-out" style="width: 85%"></div>
+</div>
+<p class="text-xs text-on-surface-variant mt-2 font-body-sm">
+        Calculé à partir de tes coefficients réels et de ton historique d'évaluations récentes.
+      </p>
+</section>
+<!-- CTA Button -->
+<div class="pt-1 pb-4">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] hover:bg-primary transition-all duration-150 active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-secondary-container text-xl" data-icon="bookmark_add">bookmark_add</span>
+        Enregistrer cet objectif dans mon plan d'étude
+      </button>
+</div>
+</main>
+<!-- Bottom Nav Bar (Shared Component Anchor) -->
+<nav aria-label="Navigation principale" class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe max-w-lg mx-auto bg-surface-container-lowest dark:bg-surface-container border-t border-surface-variant/20 dark:border-surface-variant/10 shadow-[0_-4px_16px_-2px_rgba(15,41,66,0.05)]">
+<!-- Item 0: Notes (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="school">school</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Notes</span>
+</a>
+<!-- Item 1: Objectifs (ACTIVE) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-xl px-3 py-1.5 transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="calculate" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Objectifs</span>
+</a>
+<!-- Item 2: Devoirs (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Devoirs</span>
+</a>
+<!-- Item 3: Budget (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Budget</span>
+</a>
+</nav>
+</body></html>

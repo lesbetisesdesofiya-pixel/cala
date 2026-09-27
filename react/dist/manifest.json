@@ -1,0 +1,17 @@
+{
+  "name": "ClassiNote — Assistant Scolaire & Budget",
+  "short_name": "ClassiNote",
+  "description": "Notes, devoirs, objectifs et budget étudiant. Ta mention, calculée d'avance.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "fr",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

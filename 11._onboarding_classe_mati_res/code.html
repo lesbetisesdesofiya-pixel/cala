@@ -1,0 +1,437 @@
+<!DOCTYPE html><html class="h-full" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Onboarding — Choix de Classe &amp; Matières</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "background": "#f8f9ff",
+            "error": "#ba1a1a",
+            "primary-fixed": "#d1e4ff",
+            "secondary-fixed": "#ffdea9",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-secondary-container": "#6b4b00",
+            "tertiary-fixed-dim": "#aec7f7",
+            "on-primary-fixed": "#011d35",
+            "on-surface": "#0b1c30",
+            "secondary-fixed-dim": "#ffba27",
+            "secondary": "#7d5800",
+            "secondary-container": "#ffb702",
+            "on-tertiary-fixed": "#001b3d",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#49607c",
+            "surface-container-lowest": "#ffffff",
+            "inverse-primary": "#b0c9e8",
+            "surface-bright": "#f8f9ff",
+            "inverse-surface": "#213145",
+            "on-primary-container": "#7991af",
+            "surface-container-highest": "#d3e4fe",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#d6e3ff",
+            "on-secondary-fixed": "#271900",
+            "on-tertiary-container": "#768fbb",
+            "outline": "#74777e",
+            "tertiary-container": "#08274e",
+            "surface-dim": "#cbdbf5",
+            "surface-container": "#e5eeff",
+            "inverse-on-surface": "#eaf1ff",
+            "primary-container": "#0f2942",
+            "surface-variant": "#d3e4fe",
+            "on-primary-fixed-variant": "#314863",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "on-surface-variant": "#43474d",
+            "primary": "#001428",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "on-background": "#0b1c30",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#00122d",
+            "surface": "#f8f9ff",
+            "surface-container-high": "#dce9ff",
+            "outline-variant": "#c3c6ce",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "0.75rem",
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex justify-center selection:bg-secondary-container selection:text-primary">
+<!-- Mobile Frame Container (max-w-lg screen for focused mobile onboarding flow) -->
+<main class="w-full max-w-lg bg-surface min-h-screen flex flex-col relative pb-32 shadow-xl border-x border-surface-variant/20">
+<!-- Top Flow Navigation & Progress Header -->
+<header class="w-full pt-4 px-4 bg-surface-container-lowest sticky top-0 z-30 shadow-sm">
+<div class="flex items-center justify-between pb-3">
+<button aria-label="Retour" class="w-10 h-10 rounded-xl flex items-center justify-center text-primary hover:bg-surface-container transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-bold">Configuration</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Étape 2 sur 2</span>
+</div>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1 px-2.5 rounded-lg hover:bg-surface-container" type="button">
+          Aide
+        </button>
+</div>
+<!-- Linear Stepper / Indicator Bar at 60% -->
+<div class="pb-3 pt-1">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Profil scolaire &amp; matières</span>
+<span class="font-label-md text-label-md text-primary font-bold">60%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full transition-all duration-500 ease-out" style="width: 60%;"></div>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="px-4 pt-6 space-y-6 flex-1">
+<!-- Hero Introduction Banner -->
+<section class="space-y-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="auto_awesome" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+          Personnalisation automatique
+        </div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+          Personnalise ton année
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Choisis ton niveau et sélectionne les matières que tu suis pour adapter ton emploi du temps et tes calculs de moyenne.
+        </p>
+</section>
+<!-- Section 1: Choix du Cycle & Classe -->
+<section class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant/40 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.05)] space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">1</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Cycle &amp; Classe</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">Obligatoire</span>
+</div>
+<!-- Segmented Control: Cycle -->
+<div class="bg-surface-container-low p-1 rounded-xl flex items-center gap-1 border border-surface-variant/30">
+<button class="flex-1 py-2 text-center rounded-lg font-label-md text-label-md text-on-surface-variant transition-all hover:text-primary" type="button">
+            Collège
+          </button>
+<button class="flex-1 py-2 text-center rounded-lg font-label-md text-label-md bg-white text-primary font-bold shadow-sm border border-surface-variant/20 transition-all" type="button">
+            Lycée
+          </button>
+<button class="flex-1 py-2 text-center rounded-lg font-label-md text-label-md text-on-surface-variant transition-all hover:text-primary truncate px-1" type="button">
+            Supérieur
+          </button>
+</div>
+<!-- Class Selection Chips Grid -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Sélectionne ta section exacte</label>
+<div class="flex flex-wrap gap-2" id="class-chips">
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              2nde C
+            </button>
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              2nde A
+            </button>
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              1ère D
+            </button>
+<!-- Selected State (Terminale D) -->
+<button class="chip-item active px-3.5 py-2 rounded-xl border-2 border-secondary-container bg-primary-container text-white font-body-sm text-body-sm font-bold shadow-sm flex items-center gap-1.5 transition-all" type="button">
+<span>Terminale D</span>
+<span class="material-symbols-outlined text-secondary-container text-base font-bold" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              Terminale C
+            </button>
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              Terminale A1
+            </button>
+<button class="chip-item px-3.5 py-2 rounded-xl border border-surface-variant/60 font-body-sm text-body-sm font-semibold text-on-surface hover:border-primary transition-all active:scale-95 bg-white" type="button">
+              Terminale A2
+            </button>
+</div>
+</div>
+</section>
+<!-- Section 2: Sélection des Matières -->
+<section class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">2</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Sélectionne tes matières</h2>
+</div>
+<span class="font-label-md text-label-md font-bold px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed transition-transform duration-150" id="selected-counter">
+            6 matières sélectionnées
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Pochettes adaptées au programme officiel de Terminale D. Coche ou décoche selon tes options.
+        </p>
+<!-- Subjects Interactive List / Bento Style Cards -->
+<div class="space-y-2.5" id="subjects-container">
+<!-- 1. Mathématiques (Checked - Coef 5) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="functions">functions</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Mathématiques</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Enseignement de spécialité</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-primary-container text-white">Coef. 5</span>
+</div>
+</label>
+<!-- 2. Physique-Chimie (Checked - Coef 4) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="science">science</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Physique-Chimie</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Enseignement de spécialité</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-primary-container text-white">Coef. 4</span>
+</div>
+</label>
+<!-- 3. SVT (Checked - Coef 4) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Sciences de la Vie et de la Terre</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sciences &amp; Vivant</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-primary-container text-white">Coef. 4</span>
+</div>
+</label>
+<!-- 4. Français / Philosophie (Checked - Coef 3) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_stories">auto_stories</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Français / Philosophie</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tronc commun</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-surface-container-high text-primary">Coef. 3</span>
+</div>
+</label>
+<!-- 5. Anglais LV1 (Checked - Coef 2) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="language">language</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Anglais LV1</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Langues vivantes</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-surface-container-high text-primary">Coef. 2</span>
+</div>
+</label>
+<!-- 6. Histoire - Géographie (Checked - Coef 2) -->
+<label class="subject-card flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-sm hover:border-primary-container cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input checked="" class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="public">public</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-primary">Histoire - Géographie</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sciences humaines</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-lg bg-surface-container-high text-primary">Coef. 2</span>
+</div>
+</label>
+<!-- 7. Espagnol / Allemand LV2 (Unchecked - Coef 1) -->
+<label class="subject-card opacity-75 flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/30 hover:border-surface-variant cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="translate">translate</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-medium text-on-surface">Espagnol / Allemand LV2</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Option facultative</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant">Coef. 1</span>
+</div>
+</label>
+<!-- 8. EPS (Unchecked - Coef 1) -->
+<label class="subject-card opacity-75 flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/30 hover:border-surface-variant cursor-pointer transition-all active:scale-[0.99] select-none">
+<div class="flex items-center gap-3.5">
+<input class="subject-checkbox w-5 h-5 rounded-md border-outline-variant text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="sports_soccer">sports_soccer</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-medium text-on-surface">Éducation Physique EPS</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sport &amp; Santé</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant">Coef. 1</span>
+</div>
+</label>
+</div>
+<!-- Custom Subject Button -->
+<button class="w-full py-3 px-4 rounded-xl border border-dashed border-outline-variant/60 hover:border-primary text-primary font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-surface-container-low transition-all" type="button">
+<span class="material-symbols-outlined text-base" data-icon="add_circle">add_circle</span>
+          Ajouter une matière personnalisée
+        </button>
+</section>
+<!-- Informational Insight Callout -->
+<aside class="p-4 rounded-2xl bg-secondary-fixed/35 border border-secondary-container/40 flex items-start gap-3 text-on-surface">
+<span class="text-xl">💡</span>
+<p class="font-body-sm text-body-sm leading-relaxed text-on-secondary-fixed-variant">
+<strong class="font-semibold text-primary">Astuce calcul :</strong> Ton coefficient servira à calculer automatiquement ta moyenne semestrielle pondérée en direct à chaque nouvelle note ajoutée.
+        </p>
+</aside>
+</div>
+<!-- Sticky Bottom Navigation CTA Ribbon (Task-Focused: Standard BottomNavBar is suppressed during Onboarding) -->
+<div class="fixed bottom-0 left-0 right-0 max-w-lg mx-auto p-4 bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-variant/20 shadow-[0_-8px_24px_-4px_rgba(15,41,66,0.08)] z-40">
+<button class="w-full h-12 rounded-xl bg-secondary-container hover:bg-secondary-fixed-dim active:scale-[0.98] text-primary font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-2 transition-all shadow-[0_4px_16px_-2px_rgba(255,183,2,0.4)]" type="button">
+<span>Terminer et accéder à mon tableau de bord</span>
+<span class="material-symbols-outlined font-bold text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center font-label-sm text-label-sm text-on-surface-variant mt-2">
+        Tu pourras modifier ces paramètres à tout moment dans ton profil.
+      </p>
+</div>
+</main>
+<!-- Dynamic Micro-interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Interactive Class Chips Selection
+      const chips = document.querySelectorAll('#class-chips .chip-item');
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => {
+            c.classList.remove('active', 'border-2', 'border-secondary-container', 'bg-primary-container', 'text-white');
+            c.classList.add('border-surface-variant/60', 'bg-white', 'text-on-surface');
+            const check = c.querySelector('.material-symbols-outlined');
+            if (check) check.remove();
+          });
+
+          chip.classList.remove('border-surface-variant/60', 'bg-white', 'text-on-surface');
+          chip.classList.add('active', 'border-2', 'border-secondary-container', 'bg-primary-container', 'text-white');
+          
+          if (!chip.querySelector('.material-symbols-outlined')) {
+            const checkIcon = document.createElement('span');
+            checkIcon.className = 'material-symbols-outlined text-secondary-container text-base font-bold';
+            checkIcon.setAttribute('data-icon', 'check_circle');
+            checkIcon.setAttribute('data-weight', 'fill');
+            checkIcon.style.fontVariationSettings = "'FILL' 1";
+            checkIcon.textContent = 'check_circle';
+            chip.appendChild(checkIcon);
+          }
+        });
+      });
+
+      // 2. Interactive Counter & Subject Cards styling
+      const checkboxes = document.querySelectorAll('.subject-checkbox');
+      const counterBadge = document.getElementById('selected-counter');
+
+      function updateSubjects() {
+        let checkedCount = 0;
+        checkboxes.forEach(cb => {
+          const card = cb.closest('.subject-card');
+          if (cb.checked) {
+            checkedCount++;
+            card.classList.remove('opacity-75');
+            card.classList.add('border-surface-variant/40');
+          } else {
+            card.classList.add('opacity-75');
+            card.classList.remove('border-surface-variant/40');
+          }
+        });
+        
+        counterBadge.textContent = `${checkedCount} matière${checkedCount > 1 ? 's' : ''} sélectionnée${checkedCount > 1 ? 's' : ''}`;
+        counterBadge.classList.add('scale-105');
+        setTimeout(() => counterBadge.classList.remove('scale-105'), 150);
+      }
+
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateSubjects);
+      });
+    });
+  </script>
+</body></html>

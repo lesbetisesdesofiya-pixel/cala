@@ -1,0 +1,557 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Mon Profil &amp; Paramètres - Espace Étudiant</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim as requested -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "background": "#f8f9ff",
+            "error": "#ba1a1a",
+            "primary-fixed": "#d1e4ff",
+            "secondary-fixed": "#ffdea9",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-secondary-container": "#6b4b00",
+            "tertiary-fixed-dim": "#aec7f7",
+            "on-primary-fixed": "#011d35",
+            "on-surface": "#0b1c30",
+            "secondary-fixed-dim": "#ffba27",
+            "secondary": "#7d5800",
+            "secondary-container": "#ffb702",
+            "on-tertiary-fixed": "#001b3d",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#49607c",
+            "surface-container-lowest": "#ffffff",
+            "inverse-primary": "#b0c9e8",
+            "surface-bright": "#f8f9ff",
+            "inverse-surface": "#213145",
+            "on-primary-container": "#7991af",
+            "surface-container-highest": "#d3e4fe",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#d6e3ff",
+            "on-secondary-fixed": "#271900",
+            "on-tertiary-container": "#768fbb",
+            "outline": "#74777e",
+            "tertiary-container": "#08274e",
+            "surface-dim": "#cbdbf5",
+            "surface-container": "#e5eeff",
+            "inverse-on-surface": "#eaf1ff",
+            "primary-container": "#0f2942",
+            "surface-variant": "#d3e4fe",
+            "on-primary-fixed-variant": "#314863",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "on-surface-variant": "#43474d",
+            "primary": "#001428",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "on-background": "#0b1c30",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#00122d",
+            "surface": "#f8f9ff",
+            "surface-container-high": "#dce9ff",
+            "outline-variant": "#c3c6ce",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "0.75rem",
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": [
+              "Plus Jakarta Sans"
+            ],
+            "body-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-md": [
+              "Plus Jakarta Sans"
+            ],
+            "display": [
+              "Plus Jakarta Sans"
+            ],
+            "label-md": [
+              "Plus Jakarta Sans"
+            ],
+            "body-md": [
+              "Plus Jakarta Sans"
+            ],
+            "label-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "body-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "label-sm": [
+              "Plus Jakarta Sans"
+            ]
+          },
+          "fontSize": {
+            "headline-lg-mobile": [
+              "26px",
+              {
+                "lineHeight": "34px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "700"
+              }
+            ],
+            "body-lg": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-lg": [
+              "30px",
+              {
+                "lineHeight": "38px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-sm": [
+              "18px",
+              {
+                "lineHeight": "26px",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-md": [
+              "22px",
+              {
+                "lineHeight": "30px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "700"
+              }
+            ],
+            "display": [
+              "36px",
+              {
+                "lineHeight": "44px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "800"
+              }
+            ],
+            "label-md": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "22px",
+                "fontWeight": "400"
+              }
+            ],
+            "label-lg": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "letterSpacing": "0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-sm": [
+              "12px",
+              {
+                "lineHeight": "18px",
+                "fontWeight": "400"
+              }
+            ],
+            "label-sm": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.03em",
+                "fontWeight": "700"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .card-shadow {
+      box-shadow: 0 4px 16px -2px rgba(15, 41, 66, 0.05);
+    }
+    .navy-card-shadow {
+      box-shadow: 0 8px 24px -4px rgba(15, 41, 66, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24 antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Main Mobile Shell Container (Max Width LG for clean presentation) -->
+<div class="max-w-lg mx-auto min-h-screen flex flex-col relative bg-background">
+<!-- Top App Bar / Header -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md px-4 h-16 flex items-center justify-between border-b border-surface-variant/30 shadow-sm">
+<button aria-label="Retour" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-container active:scale-95 transition-all text-on-surface" type="button">
+<span class="material-symbols-outlined text-primary text-[24px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary tracking-tight">
+        Mon Profil
+      </h1>
+<button aria-label="Paramètres ou Déconnexion" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-container active:scale-95 transition-all text-on-surface-variant" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="manage_accounts">manage_accounts</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 py-5 space-y-5">
+<!-- Carte Profil Utilisateur -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 card-shadow border border-surface-variant/40 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-36 h-36 bg-surface-container-high/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-start gap-4 relative z-10">
+<!-- Avatar Étudiant -->
+<div class="relative shrink-0">
+<div class="w-18 h-18 rounded-2xl overflow-hidden ring-3 ring-surface-variant/60 shadow-sm">
+<img alt="Photo de profil étudiant" class="w-16 h-16 object-cover object-center rounded-2xl" data-alt="A portrait of a focused young West African male university student smiling warmly in high daylight indoor study space. The scene possesses clean modern styling with rich navy blue and crisp white apparel. High-key natural lighting and a soft bokeh background highlight his energetic and studious demeanor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc37S5ZwTGDa5sZgo9p2asALAc-xidmcerPiO89QUOszTPCrmJgnke_bSQNev8cwdGHvZWH7QXoDToQfEYPxp2PGffsFQYOVntJtVDeGKeXRQQ4KM3jxXtdTZUL1Z7VIQdLWen16yOqt6nC7xjThU64URNBs2UNNCvlkd-OS2cV2JKhNvNu5iR7cvVDYq6rAB6nzPrMB69tv2W5QYyprNlgALVfbvOAhMEBtrlPC_nCOyczIjZ0VqIrg">
+</div>
+<button class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Identité -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold truncate">Koffi Emmanuel</h2>
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate mt-0.5">emmanuel.koffi@etudiant.ci</p>
+<div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              Formule Gratuite
+            </div>
+</div>
+</div>
+<!-- Bouton Passer Premium -->
+<div class="mt-4 pt-3.5 border-t border-surface-container-high/50 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shadow-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="hotel_class" style="font-variation-settings: 'FILL' 1;">hotel_class</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm font-bold text-primary">Accès Illimité</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[11px] leading-tight">500 FCFA / mois</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed-dim font-label-md text-label-md font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all" type="button">
+<span>Passer Premium</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Section Académique -->
+<section class="space-y-3">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-surface-tint text-[20px]" data-icon="school">school</span>
+            Parcours Académique
+          </h3>
+<span class="font-label-sm text-label-sm font-bold text-surface-tint">2023 - 2024</span>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl p-4 card-shadow border border-surface-variant/40 space-y-4">
+<!-- Niveau & Classe -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold font-headline-sm text-headline-sm">
+                TD
+              </div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Classe &amp; Série</p>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md font-bold text-primary">Terminale D</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest font-label-sm text-label-sm font-semibold text-primary">Lycée Scientifique</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Matières Actives -->
+<div>
+<div class="flex items-center justify-between mb-2.5">
+<p class="font-label-md text-label-md font-bold text-on-surface-variant">Mes Matières actives (5)</p>
+<button class="font-label-sm text-label-sm font-bold text-primary hover:underline flex items-center gap-0.5" type="button">
+<span>Gérer</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Chips des matières -->
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold border border-surface-variant/30">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                Mathématiques (Coeff. 4)
+              </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold border border-surface-variant/30">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                SVT (Coeff. 4)
+              </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold border border-surface-variant/30">
+<span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+                Physique-Chimie (Coeff. 4)
+              </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold border border-surface-variant/30">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                Philosophie (Coeff. 2)
+              </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold border border-surface-variant/30">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+                Anglais (Coeff. 1)
+              </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section Abonnement & Avantages (Highlight Card) -->
+<section class="rounded-2xl bg-primary-container text-on-primary p-5 navy-card-shadow relative overflow-hidden border-t border-white/10">
+<!-- Décoration lumineuse dorée -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-0 right-0 p-3 opacity-20">
+<span class="material-symbols-outlined text-[72px] text-white" data-icon="stars">stars</span>
+</div>
+<div class="relative z-10 space-y-3.5">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-secondary-fixed text-label-sm font-label-sm font-bold tracking-wide">
+<span class="material-symbols-outlined text-[14px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+              PASS PREMIUM ÉTUDIANT
+            </div>
+<span class="font-headline-sm text-headline-sm font-extrabold text-secondary-container">500 F<span class="text-label-sm font-normal text-white/70">/mois</span></span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold text-white">Multipliez vos chances de réussite</h4>
+<p class="font-body-sm text-body-sm text-primary-fixed mt-1">Débloquez tous les outils de simulation de moyenne et alertes directes.</p>
+</div>
+<!-- Liste des avantages Bento style -->
+<div class="grid grid-cols-1 gap-2 pt-1">
+<div class="flex items-center gap-2.5 text-white/90 text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-secondary-container text-[18px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Simulateur illimité de mention au BAC</span>
+</div>
+<div class="flex items-center gap-2.5 text-white/90 text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-secondary-container text-[18px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Rappels de devoirs par WhatsApp &amp; SMS</span>
+</div>
+<div class="flex items-center gap-2.5 text-white/90 text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-secondary-container text-[18px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Sauvegarde cloud instantanée &amp; multi-écrans</span>
+</div>
+</div>
+<button class="w-full mt-2 h-12 rounded-xl bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-container font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md active:scale-98 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span>S'abonner maintenant</span>
+</button>
+</div>
+</section>
+<!-- Section Paramètres & Préférences -->
+<section class="space-y-3">
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-surface-tint text-[20px]" data-icon="settings">settings</span>
+          Préférences &amp; Paramètres
+        </h3>
+<div class="bg-surface-container-lowest rounded-2xl card-shadow border border-surface-variant/40 divide-y divide-surface-container">
+<!-- Langue -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="language">language</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-primary">Langue de l'application</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Français (FR)</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<span class="text-label-md font-label-md font-semibold text-on-surface-variant">FR</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Devise & Pays -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-primary">Devise &amp; Pays</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Côte d'Ivoire (FCFA - XOF)</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<span class="text-label-md font-label-md font-semibold text-on-surface-variant">XOF</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Notifications & Alertes -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications_active">notifications_active</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-primary">Rappels &amp; Notifications</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Devoirs et nouvelles notes</p>
+</div>
+</div>
+<!-- Toggle Switch (Actif) -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- Thème d'affichage -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="palette">palette</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-primary">Thème d'affichage</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Mode Clair activé</p>
+</div>
+</div>
+<!-- Segmented Control Clarté -->
+<div class="flex items-center bg-surface-container p-1 rounded-xl gap-1">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold shadow-xs flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="light_mode" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+                Clair
+              </button>
+<button class="px-2.5 py-1 rounded-lg text-on-surface-variant hover:text-primary font-label-sm text-label-sm font-medium flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="dark_mode">dark_mode</span>
+                Sombre
+              </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section Sécurité & Compte -->
+<section class="space-y-3">
+<h3 class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-surface-tint text-[20px]" data-icon="security">security</span>
+          Sécurité &amp; Support
+        </h3>
+<div class="bg-surface-container-lowest rounded-2xl card-shadow border border-surface-variant/40 divide-y divide-surface-container overflow-hidden">
+<!-- Mot de passe -->
+<a class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock_reset">lock_reset</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-primary">Modifier le mot de passe</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- FAQ & Assistance -->
+<a class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_center">help_center</span>
+</div>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary">Aide, FAQ &amp; Contact</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Support WhatsApp 7j/7</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Confidentialité -->
+<a class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors" href="#">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="policy">policy</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-primary">Politique de confidentialité</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Déconnexion Discrète -->
+<div class="p-4 flex items-center justify-between hover:bg-error-container/20 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-error-container/40 flex items-center justify-center text-error group-hover:bg-error group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-error">Se déconnecter</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Session active sur ce smartphone</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error text-[18px]" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+</div>
+</div>
+</section>
+<!-- Note de Version / Mentions Légales Pied de page -->
+<div class="py-3 text-center">
+<p class="font-label-sm text-label-sm text-outline">Application Réussite Étudiante • v2.4.1 (Build 412)</p>
+<p class="font-body-sm text-body-sm text-outline-variant text-[11px] mt-0.5">Conçu avec rigueur et simplicité</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Synchronized with Shared Components JSON) -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center h-16 px-2 pb-safe max-w-lg mx-auto bg-surface-container-lowest border-t border-surface-variant/20 shadow-[0_-4px_16px_-2px_rgba(15,41,66,0.05)]">
+<!-- Onglet 1: Notes -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="school">school</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Notes</span>
+</button>
+<!-- Onglet 2: Objectifs -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="calculate">calculate</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Objectifs</span>
+</button>
+<!-- Onglet 3: Devoirs -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Devoirs</span>
+</button>
+<!-- Onglet 4: Budget -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm font-bold mt-0.5">Budget</span>
+</button>
+</nav>
+</div>
+</body></html>

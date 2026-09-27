@@ -1,0 +1,257 @@
+<!DOCTYPE html><html class="light" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sécurité du compte - Définir un Code PIN</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#d6e3ff",
+            "on-background": "#0b1c30",
+            "outline": "#74777e",
+            "on-tertiary-fixed": "#001b3d",
+            "inverse-surface": "#213145",
+            "surface": "#f8f9ff",
+            "background": "#f8f9ff",
+            "primary": "#001428",
+            "surface-container-low": "#eff4ff",
+            "surface-bright": "#f8f9ff",
+            "on-secondary-fixed": "#271900",
+            "surface-variant": "#d3e4fe",
+            "tertiary-fixed-dim": "#aec7f7",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#7991af",
+            "primary-container": "#0f2942",
+            "on-secondary-container": "#6b4b00",
+            "primary-fixed-dim": "#b0c9e8",
+            "on-error": "#ffffff",
+            "surface-container": "#e5eeff",
+            "on-secondary-fixed-variant": "#5e4100",
+            "on-secondary": "#ffffff",
+            "on-primary-fixed-variant": "#314863",
+            "secondary-fixed-dim": "#ffba27",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#08274e",
+            "on-surface-variant": "#43474d",
+            "surface-container-high": "#dce9ff",
+            "secondary-fixed": "#ffdea9",
+            "on-tertiary-container": "#768fbb",
+            "secondary-container": "#ffb702",
+            "outline-variant": "#c3c6ce",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eaf1ff",
+            "on-primary-fixed": "#011d35",
+            "secondary": "#7d5800",
+            "on-surface": "#0b1c30",
+            "inverse-primary": "#b0c9e8",
+            "tertiary": "#00122d",
+            "primary-fixed": "#d1e4ff",
+            "surface-tint": "#49607c",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#2e476f",
+            "surface-container-lowest": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "gutter-mobile": "0.75rem",
+            "gutter": "1rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "margin-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col items-center justify-between antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Shell Wrapper (Responsive Mobile/Tablet Canvas) -->
+<main class="w-full max-w-lg min-h-screen flex flex-col justify-between px-4 py-4 md:py-8 mx-auto relative bg-surface">
+<!-- Top Navigation Ribbon (Linear/Onboarding contextual header) -->
+<header class="w-full flex items-center justify-between h-14">
+<button aria-label="Retour" class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-all shadow-sm border border-outline-variant/30" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Step Indicator Badge -->
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-surface-variant/40">
+<div class="flex gap-1">
+<span class="w-2 h-1.5 rounded-full bg-primary-container"></span>
+<span class="w-2 h-1.5 rounded-full bg-primary-container"></span>
+<span class="w-5 h-1.5 rounded-full bg-secondary-container"></span>
+<span class="w-2 h-1.5 rounded-full bg-outline-variant/50"></span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Étape 3 sur 4</span>
+</div>
+<!-- Security Status Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary font-bold" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">256-bit</span>
+</div>
+</header>
+<!-- Main Content Focus Card & PIN Header -->
+<div class="flex flex-col items-center text-center mt-2 mb-3">
+<!-- Shield / Padlock Hero Badge -->
+<div class="relative mb-3 group">
+<div class="w-20 h-20 rounded-2xl bg-primary-container flex items-center justify-center shadow-[0_8px_24px_-4px_rgba(15,41,66,0.25)] border-t border-white/10 relative z-10 transition-transform duration-300">
+<span class="material-symbols-outlined text-[40px] text-secondary-container" data-icon="shield_lock" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+</div>
+<!-- Ambient Solar Glow Aura -->
+<div class="absolute -inset-2 bg-secondary-container/20 rounded-3xl blur-lg -z-0"></div>
+<div class="absolute -bottom-1 -right-1 bg-secondary-container text-on-secondary-container rounded-full p-1 border-2 border-surface shadow-sm">
+<span class="material-symbols-outlined text-[14px] font-bold block" data-icon="lock">lock</span>
+</div>
+</div>
+<!-- Typography Header -->
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight mb-2">
+        Définis ton Code PIN
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">
+        Ce code à 4 chiffres protégera l'accès à tes notes, devoirs et budget à chaque ouverture de l'application.
+      </p>
+<!-- PIN Digits Representation Container -->
+<div aria-label="Indicateur de saisie du PIN" class="mt-6 flex items-center justify-center gap-4 py-2" id="pin-dots-container" role="status">
+<!-- Dot 1 (Filled) -->
+<div class="pin-dot w-5 h-5 rounded-full border-2 border-primary-container bg-primary-container shadow-sm flex items-center justify-center transition-all duration-200">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<!-- Dot 2 (Filled) -->
+<div class="pin-dot w-5 h-5 rounded-full border-2 border-primary-container bg-primary-container shadow-sm flex items-center justify-center transition-all duration-200">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<!-- Dot 3 (Empty / Active Cursor) -->
+<div class="pin-dot w-5 h-5 rounded-full border-2 border-secondary-container bg-surface-container-lowest shadow-sm flex items-center justify-center transition-all duration-200 animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+</div>
+<!-- Dot 4 (Empty) -->
+<div class="pin-dot w-5 h-5 rounded-full border-2 border-outline-variant/60 bg-surface-container-lowest shadow-sm transition-all duration-200"></div>
+</div>
+<p class="font-label-sm text-label-sm text-secondary font-bold mt-2">2 chiffres sur 4 renseignés</p>
+</div>
+<!-- Biometrics Quick Toggle Card -->
+
+<!-- Virtual Tactile Keypad (Numpad) -->
+<div class="w-full bg-surface-container-lowest/80 backdrop-blur-sm rounded-2xl border border-outline-variant/20 p-3 shadow-sm mb-3">
+<div class="grid grid-cols-3 gap-2 sm:gap-3 max-w-sm mx-auto">
+<!-- 1 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">1</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant/70 tracking-widest font-normal uppercase -mt-1">&nbsp;</span>
+</button>
+<!-- 2 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">2</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">ABC</span>
+</button>
+<!-- 3 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">3</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">DEF</span>
+</button>
+<!-- 4 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">4</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">GHI</span>
+</button>
+<!-- 5 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">5</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">JKL</span>
+</button>
+<!-- 6 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">6</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">MNO</span>
+</button>
+<!-- 7 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">7</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">PQRS</span>
+</button>
+<!-- 8 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">8</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">TUV</span>
+</button>
+<!-- 9 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">9</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant tracking-widest font-bold uppercase -mt-1">WXYZ</span>
+</button>
+<!-- Key: Biometrics Shortcut -->
+<div class="h-14 rounded-xl" aria-hidden="true"></div>
+<!-- 0 -->
+<button class="numpad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-headline-md text-headline-md flex flex-col items-center justify-center active:scale-95 transition-all shadow-sm" type="button">
+<span class="">0</span>
+<span class="font-label-sm text-[9px] text-on-surface-variant/70 tracking-widest font-normal uppercase -mt-1">+</span>
+</button>
+<!-- Backspace / Delete -->
+<button aria-label="Effacer le dernier chiffre" class="numpad-btn h-14 rounded-xl bg-surface hover:bg-surface-container text-on-surface flex items-center justify-center active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="backspace">backspace</span>
+</button>
+</div>
+</div>
+<!-- Action Section & Reassurance Notice -->
+<div class="w-full flex flex-col gap-3">
+<!-- Primary Action Button -->
+<button class="w-full h-12 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-[0_4px_16px_-2px_rgba(15,41,66,0.15)] hover:bg-primary active:scale-[0.98] transition-all" type="button">
+<span class="">Confirmer le code PIN</span>
+<span class="material-symbols-outlined text-[18px] text-secondary-container" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Reassurance Micro-Banner -->
+<div class="flex items-center justify-center gap-1.5 py-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-center">
+          Ne partage jamais ton code PIN. Il reste strictement confidentiel.
+        </p>
+</div>
+</div>
+</main>
+
+
+</body></html>

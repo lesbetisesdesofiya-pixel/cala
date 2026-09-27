@@ -162,8 +162,19 @@ function Shell() {
     );
   }
   if (!uid || !db) {    // Écrans publics sans session
+    // La landing est une vitrine pleine largeur : seule la colonne mobile
+    // enferme les formulaires (login/register), jamais la vitrine.
+    if (path === "/") {
+      return (
+        <div className="min-h-screen flex flex-col relative">
+          <NetBar />
+          <main className="flex-1"><Landing /></main>
+          <PwaBanner />
+        </div>
+      );
+    }
     return (
-      <div className="max-w-lg mx-auto min-h-screen flex flex-col relative">
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col relative bg-white sm:border-x sm:border-white/10 sm:shadow-[0_0_90px_rgba(0,0,0,0.45)]">
         {back && <TopBack titre={back[0]} sous={back[1]} />}
         <NetBar />
         <main className="flex-1 px-4 pt-4 pb-16">
@@ -179,7 +190,7 @@ function Shell() {
     );
   }
   return (
-    <div className="max-w-lg mx-auto min-h-screen flex flex-col relative">
+    <div className="max-w-lg mx-auto min-h-screen flex flex-col relative bg-white sm:border-x sm:border-white/10 sm:shadow-[0_0_90px_rgba(0,0,0,0.45)]">
       {back ? <TopBack titre={back[0]} sous={back[1]} /> : <TopBar />}
       <NetBar />
       <main className="flex-1 px-4 pt-4 pb-36">

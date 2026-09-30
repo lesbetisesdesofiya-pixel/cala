@@ -1,7 +1,8 @@
 // supabase/functions/aff-signup/index.ts
 // Inscription affilié (ou activation pour un compte existant connecté).
 // Crée : compte auth (même schéma email que les élèves, donc login commun),
-// ligne affiliates, code promo à 6 chiffres (montant 500 F, commission 20 %).
+// ligne affiliates, code promo à 6 chiffres (montant 500 F, commission 50 %
+// = 250 F fixes sur le 1er mois à 500 F, une seule fois).
 // Sans JWT : POST { phone, password, prenom, nom } -> { email, password, code }
 // Avec JWT (compte existant) : POST {} -> { code } (active l'espace affilié).
 //
@@ -39,7 +40,7 @@ async function activateSpace(admin: ReturnType<typeof createClient>, userId: str
   });
   if (e1) throw new Error("affiliate:" + e1.message);
   const { error: e2 } = await admin.from("promo_codes").insert({
-    code, montant: 500, affiliate_id: userId, commission_pct: 20, actif: true,
+    code, montant: 500, affiliate_id: userId, commission_pct: 50, actif: true,
   });
   if (e2) throw new Error("promocode:" + e2.message);
   return { code };

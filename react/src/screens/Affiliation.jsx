@@ -17,13 +17,13 @@ const STATUT_STYLE = {
 // Page publique : pitch affiliation + entrée.
 export function Affiliation() {
   useEffect(() => { track("affiliation_viewed", {}); }, []);
-  const share = "Je gagne de l'argent en parrainant des élèves sur ClassiNote : 20% de chaque abonnement. Rejoins avec mon lien : https://classinote.app/#/affiliation";
+  const share = "Je gagne 250 F par élève parrainé sur ClassiNote. Rejoins avec mon lien : https://classinote.app/#/affiliation";
   return (
     <div className="space-y-5 fade">
       <div className="rounded-2xl bg-primary-container text-white p-6 text-center relative overflow-hidden">
         <img src="./logo.png" alt="" className="w-16 h-16 rounded-2xl mx-auto object-cover" />
         <h1 className="text-2xl font-extrabold mt-3">Parraine. Gagne. Retire.</h1>
-        <p className="text-sm text-slate-300 mt-1">Ton code à 6 chiffres te rapporte <strong className="text-secondary-container">20 % de chaque abonnement</strong> payé avec. Retraits Mobile Money dès 1000 F.</p>
+        <p className="text-sm text-slate-300 mt-1">Ton code à 6 chiffres te rapporte <strong className="text-secondary-container">250 F par abonnement payé</strong> avec. Retraits Mobile Money dès 1000 F.</p>
       </div>
       <div className="grid grid-cols-3 gap-2 text-center">
         {[["1", "Reçois ton code"], ["2", "Partage-le"], ["3", "Retire tes gains"]].map(([n, t]) => (
@@ -247,7 +247,7 @@ export function AffDashboard() {
             Partager sur WhatsApp
           </a>
         </div>
-        <p className="text-[11px] text-slate-300 mt-2">20 % de chaque abonnement payé avec ton code, dès 1000 F retirables.</p>
+        <p className="text-[11px] text-slate-300 mt-2">250 F par abonnement payé avec ton code, dès 1000 F retirables.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-2">

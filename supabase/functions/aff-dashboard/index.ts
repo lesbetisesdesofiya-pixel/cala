@@ -49,6 +49,26 @@ serve(async (req) => {
     .reduce((s, o) => s + Number(o.amount), 0);
   const enAttente = (outs || []).filter((o) => ["pending", "submitted"].includes(o.status))
     .reduce((s, o) => s + Number(o.amount), 0);
+
+  // Équipe (si manager) : affiliés rattachés + leurs filleuls + gains d'équipe.
+  const { data: equipe } = await admin.from("affiliates")
+    .select("id,prenom,nom,code_promo").eq("manager_id", user.id);
+  const eqIds = (equipe || []).map((a) => a.id);
+  const { data: mGains } = eqIds.length
+    ? await admin.from("manager_earnings").select("affiliate_id,amount,kind").eq("manager_id", user.id)
+    : { data: [] };
+  const { data: eqFilleuls } = eqIds.length
+    ? await admin.from("affiliate_earnings").select("affiliate_id,filleul_user_id").in("affiliate_id", eqIds)
+    : { data: [] };
+  const parAff: Record<string, { filleuls: Set<string>; gains: number; bonus: number }> = {};
+  for (const g of (mGains || [])) {
+    const e = (parAff[g.affiliate_id] ||= { filleuls: new Set(), gains: 0, bonus: 0 });
+    if (g.kind === "bonus") e.bonus += Number(g.amount);
+    else e.gains += Number(g.amount);
+  }
+  for (const f of (eqFilleuls || [])) {
+    (parAff[f.affiliate_id] ||= { filleuls: new Set(), gains: 0, bonus: 0 }).filleuls.add(f.filleul_user_id);
+  }
   return ok({
     code: aff.code_promo,
     payout_phone: aff.payout_phone || null,
@@ -64,5 +84,14 @@ serve(async (req) => {
       };
     }),
     payouts: outs || [],
+    team: {
+      membres: (equipe || []).map((a) => ({
+        prenom: a.prenom || "Affilié", nom: a.nom || "", code: a.code_promo,
+        filleuls: parAff[a.id]?.filleuls.size || 0,
+        gains: (parAff[a.id]?.gains || 0) + (parAff[a.id]?.bonus || 0),
+      })),
+      total_gains: (mGains || []).reduce((s, g) => s + Number(g.amount), 0),
+      total_filleuls: Object.values(parAff).reduce((s, e) => s + e.filleuls.size, 0),
+    },
   });
 });

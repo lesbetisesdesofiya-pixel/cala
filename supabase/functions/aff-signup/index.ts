@@ -3,8 +3,9 @@
 // Crée : compte auth (même schéma email que les élèves, donc login commun),
 // ligne affiliates, code promo à 6 chiffres (montant 500 F, commission 50 %
 // = 250 F fixes sur le 1er mois à 500 F, une seule fois).
-// Sans JWT : POST { phone, password, prenom, nom } -> { email, password, code }
-// Avec JWT (compte existant) : POST {} -> { code } (active l'espace affilié).
+// Sans JWT : POST { phone, password, prenom, nom, manager? } -> { email, password, code }
+// Avec JWT (compte existant) : POST { manager? } -> { code } (active l'espace affilié).
+// manager = code promo du recruteur (rattachement équipe, ignoré si inconnu).
 //
 // Deploy: supabase functions deploy aff-signup --no-verify-jwt
 
@@ -30,12 +31,18 @@ async function newCode(admin: ReturnType<typeof createClient>): Promise<string> 
   throw new Error("code_gen_failed");
 }
 
-async function activateSpace(admin: ReturnType<typeof createClient>, userId: string, prenom: string, nom: string) {
+async function activateSpace(admin: ReturnType<typeof createClient>, userId: string, prenom: string, nom: string, managerCode?: string) {
   const { data: existing } = await admin.from("affiliates").select("code_promo").eq("id", userId).single();
   if (existing) return { code: existing.code_promo };
+  let managerId: string | null = null;
+  const mc = String(managerCode || "").trim().toUpperCase();
+  if (mc) {
+    const { data: mgr } = await admin.from("affiliates").select("id").eq("code_promo", mc).single();
+    if (mgr && mgr.id !== userId) managerId = mgr.id;
+  }
   const code = await newCode(admin);
   const { error: e1 } = await admin.from("affiliates").insert({
-    id: userId, code_promo: code,
+    id: userId, code_promo: code, manager_id: managerId,
     prenom: String(prenom || "Affilié"), nom: String(nom || ""),
   });
   if (e1) throw new Error("affiliate:" + e1.message);
@@ -61,7 +68,7 @@ serve(async (req) => {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return ok({ error: "unauthorized" }, 401);
     try {
-      const { code } = await activateSpace(admin, user.id, body.prenom, body.nom);
+      const { code } = await activateSpace(admin, user.id, body.prenom, body.nom, body.manager);
       return ok({ code });
     } catch (e) {
       return ok({ error: "internal:" + String(e?.message || e).slice(0, 200) }, 500);
@@ -85,7 +92,7 @@ serve(async (req) => {
     return ok({ error: "auth_create:" + (error?.message || "no-user") }, 500);
   }
   try {
-    const { code } = await activateSpace(admin, created.user.id, body.prenom, body.nom);
+    const { code } = await activateSpace(admin, created.user.id, body.prenom, body.nom, body.manager);
     await admin.from("affiliates").update({ phone: to }).eq("id", created.user.id);
     return ok({ email: pseudo, password: String(body.password), code });
   } catch (e) {

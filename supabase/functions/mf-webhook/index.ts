@@ -91,5 +91,30 @@ async function activate(sb: ReturnType<typeof createClient>, subId: string, user
       }
     }
   }
+  // Manager : 50 F par filleul + bonus 500 F aux 10 filleuls d'un affilié.
+  if (promoCodeId) {
+    const { data: pc } = await sb.from("promo_codes").select("affiliate_id").eq("id", promoCodeId).single();
+    const { data: affRow } = pc?.affiliate_id
+      ? await sb.from("affiliates").select("manager_id").eq("id", pc.affiliate_id).single()
+      : { data: null };
+    if (affRow?.manager_id) {
+      await sb.from("manager_earnings").upsert(
+        { manager_id: affRow.manager_id, affiliate_id: pc.affiliate_id, subscription_id: subId, filleul_user_id: userId, amount: 50, kind: "filleul" },
+        { onConflict: "subscription_id", ignoreDuplicates: true }
+      );
+      const { data: rows } = await sb.from("manager_earnings").select("filleul_user_id")
+        .eq("manager_id", affRow.manager_id).eq("affiliate_id", pc.affiliate_id).eq("kind", "filleul");
+      if (new Set((rows || []).map((r) => r.filleul_user_id)).size >= 10) {
+        const { data: deja } = await sb.from("manager_earnings").select("id")
+          .eq("manager_id", affRow.manager_id).eq("affiliate_id", pc.affiliate_id).eq("kind", "bonus").limit(1);
+        if (!deja || !deja.length) {
+          await sb.from("manager_earnings").insert({
+            manager_id: affRow.manager_id, affiliate_id: pc.affiliate_id, subscription_id: null,
+            filleul_user_id: userId, amount: 500, kind: "bonus",
+          });
+        }
+      }
+    }
+  }
   return new Response("ok");
 }

@@ -417,6 +417,22 @@ create table if not exists payouts (
   updated_at timestamptz default now()
 );
 alter table affiliates enable row level security;
+-- Responsable marketing : chaque affilié peut être rattaché à un manager
+-- (lien de recrutement ?m=CODE). Gains manager : 50 F par filleul payé +
+-- bonus 500 F quand un affilié de son équipe atteint 10 filleuls payés.
+alter table affiliates add column if not exists manager_id uuid references affiliates(id) on delete set null;
+create table if not exists manager_earnings (
+  id uuid primary key default gen_random_uuid(),
+  manager_id uuid not null references affiliates(id) on delete cascade,
+  affiliate_id uuid references affiliates(id) on delete set null,
+  subscription_id uuid unique references subscriptions(id) on delete cascade,
+  filleul_user_id uuid,
+  amount int not null,
+  kind text not null default 'filleul',
+  created_at timestamptz default now()
+);
+alter table manager_earnings enable row level security;
+-- Pas de policy client : lecture via aff-dashboard (service_role).
 drop policy if exists "affiliates_own_read" on affiliates;
 create policy "affiliates_own_read" on affiliates for select using (auth.uid() = id);
 drop policy if exists "affiliates_own_upd" on affiliates;

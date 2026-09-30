@@ -28,6 +28,8 @@ async function activate(admin: ReturnType<typeof createClient>, subId: string, u
   if (promoCodeId) await consumePromo(admin, promoCodeId, userId, subId);
   // Affiliation : commission une seule fois (contrainte unique par abo).
   if (promoCodeId) await creditAffiliate(admin, promoCodeId, subId, userId);
+  // Manager : 50 F par filleul + bonus 500 F aux 10 filleuls d'un affilié.
+  if (promoCodeId) await creditManager(admin, promoCodeId, subId, userId);
 }
 
 // Commission affilié : pct % du montant payé, une seule fois par abonnement
@@ -43,6 +45,32 @@ async function creditAffiliate(admin: ReturnType<typeof createClient>, codeId: s
     { affiliate_id: pc.affiliate_id, subscription_id: subId, filleul_user_id: userId, amount: gain, pct },
     { onConflict: "subscription_id", ignoreDuplicates: true }
   );
+}
+
+// Manager : 50 F par filleul payé (idempotent) + bonus 500 F quand un affilié
+// de son équipe atteint 10 filleuls payés distincts (bonus unique, garde applicative).
+async function creditManager(admin: ReturnType<typeof createClient>, codeId: string, subId: string, userId: string) {
+  const { data: pc } = await admin.from("promo_codes").select("affiliate_id").eq("id", codeId).single();
+  if (!pc?.affiliate_id) return;
+  const { data: affRow } = await admin.from("affiliates").select("manager_id").eq("id", pc.affiliate_id).single();
+  const managerId = affRow?.manager_id;
+  if (!managerId) return;
+  await admin.from("manager_earnings").upsert(
+    { manager_id: managerId, affiliate_id: pc.affiliate_id, subscription_id: subId, filleul_user_id: userId, amount: 50, kind: "filleul" },
+    { onConflict: "subscription_id", ignoreDuplicates: true }
+  );
+  const { data: rows } = await admin.from("manager_earnings").select("filleul_user_id")
+    .eq("manager_id", managerId).eq("affiliate_id", pc.affiliate_id).eq("kind", "filleul");
+  if (new Set((rows || []).map((r) => r.filleul_user_id)).size >= 10) {
+    const { data: deja } = await admin.from("manager_earnings").select("id")
+      .eq("manager_id", managerId).eq("affiliate_id", pc.affiliate_id).eq("kind", "bonus").limit(1);
+    if (!deja || !deja.length) {
+      await admin.from("manager_earnings").insert({
+        manager_id: managerId, affiliate_id: pc.affiliate_id, subscription_id: null,
+        filleul_user_id: userId, amount: 500, kind: "bonus",
+      });
+    }
+  }
 }
 
 // Enregistre l'usage d'un code (unique par élève, contrainte DB) et incrémente

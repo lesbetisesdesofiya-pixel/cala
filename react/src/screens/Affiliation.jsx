@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { sb, edgeFn, SUPABASE_URL, SUPABASE_ANON_KEY } from "../lib/supabase";
 import { track } from "../lib/analytics";
@@ -97,21 +97,23 @@ export function AffLogin() {
 export function AffRegister() {
   const { reload, toast } = useApp();
   const nav = useNavigate();
+  const [params] = useSearchParams();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
+  const [manager, setManager] = useState(params.get("m") || "");
   const [busy, setBusy] = useState(false);
   const submit = async (e) => {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
     try {
-      track("aff_signup_started", {});
+      track("aff_signup_started", { via_manager: !!manager.trim() });
       const res = await fetch(`${SUPABASE_URL}/functions/v1/aff-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY },
-        body: JSON.stringify({ phone, password, prenom: prenom.trim(), nom: nom.trim() }),
+        body: JSON.stringify({ phone, password, prenom: prenom.trim(), nom: nom.trim(), manager: manager.trim() || undefined }),
       });
       const out = await res.json();
       if (!res.ok) {
@@ -145,6 +147,11 @@ export function AffRegister() {
             className="h-12 rounded-xl border px-4" />
           <input required placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)}
             className="h-12 rounded-xl border px-4" />
+        </div>
+        <div>
+          <input placeholder="Code du recruteur (optionnel)" value={manager} onChange={(e) => setManager(e.target.value.toUpperCase())}
+            className="w-full h-12 rounded-xl border px-4 uppercase font-bold text-sm" />
+          {!!params.get("m") && <p className="text-[11px] text-emerald-700 font-bold mt-1">Lien de recrutement reconnu.</p>}
         </div>
         <button disabled={busy} className="w-full h-12 rounded-xl bg-secondary-container font-bold text-primary">
           {busy ? "…" : "Créer mon espace affilié"}
@@ -268,6 +275,23 @@ export function AffDashboard() {
           <p className="text-xl font-extrabold text-primary">{fmt(s.en_attente)}</p>
         </div>
       </div>
+
+      {data.team?.membres?.length > 0 && (
+        <section className="bg-white rounded-2xl border p-4 space-y-2">
+          <h2 className="font-bold text-primary">Mon équipe ({data.team.membres.length})</h2>
+          <p className="text-xs text-slate-500">50 F par filleul payé + 500 F bonus par affilié à 10 filleuls. Total équipe : <strong>{fmt(data.team.total_gains)}</strong> pour {data.team.total_filleuls} filleuls.</p>
+          <p className="text-xs text-slate-500">Lien de recrutement : <strong className="text-primary">classinote.app/#/affiliation/register?m={data.code}</strong></p>
+          {data.team.membres.map((m, i) => (
+            <div key={i} className="flex items-center justify-between border-b last:border-0 py-2">
+              <div>
+                <p className="text-sm font-bold text-primary">{m.prenom} {m.nom} <span className="font-medium text-slate-400">• {m.code}</span></p>
+                <p className="text-[11px] text-slate-500">{m.filleuls} filleul{m.filleuls > 1 ? "s" : ""}</p>
+              </div>
+              <p className="text-sm font-extrabold text-primary">{fmt(m.gains)}</p>
+            </div>
+          ))}
+        </section>
+      )}
 
       <section className="bg-white rounded-2xl border p-4 space-y-3">
         <h2 className="font-bold text-primary">Retirer mes gains</h2>

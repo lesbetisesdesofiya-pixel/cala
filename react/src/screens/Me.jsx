@@ -11,8 +11,6 @@ export default function Me() {
   const pf = db.profil;
   const [sub, setSub] = useState("...");
   const [busyParam, setBusyParam] = useState(false);
-  // 1er mois payé = 500 F, ensuite 1000 F/mois (même règle que mf-pay/paywall).
-  const [firstMonth, setFirstMonth] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -22,11 +20,6 @@ export default function Me() {
       if (data?.expires_at && new Date(data.expires_at) > new Date()) {
         setSub(`Actif jusqu'au ${new Date(data.expires_at).toLocaleDateString("fr-FR")}`);
       } else setSub("Expiré ou inactif");
-      try {
-        const { data: pay } = await sb.from("subscriptions").select("id")
-          .eq("user_id", db._uid).gt("amount", 0).in("status", ["active", "expired"]).limit(1);
-        setFirstMonth(!pay || !pay.length);
-      } catch {}
     })();
   }, [db._uid]);
 
@@ -72,7 +65,7 @@ export default function Me() {
           Abonnement : {sub} — <Link to="/paywall" className="underline">Gérer</Link>
         </div>
         <Link to="/premium" className="mt-3 flex items-center justify-between border-t pt-3">
-            <span className="text-sm font-bold">Pass Premium — {firstMonth ? "500 F le 1er mois" : "1000 FCFA/mois"}</span>
+            <span className="text-sm font-bold">Pass Premium — 1000 FCFA/mois</span>
           <span className="px-3 py-2 rounded-xl bg-secondary-container text-xs font-bold">Passer Premium →</span>
         </Link>
       </section>
@@ -133,7 +126,7 @@ export default function Me() {
       </section>
 
       <section className="rounded-2xl bg-primary-container text-white p-5">
-        <p className="text-xs text-secondary-container font-bold">PASS PREMIUM ÉTUDIANT — {firstMonth ? "500 F le 1er mois, puis 1000 F/mois" : "1000 F/mois"}</p>
+        <p className="text-xs text-secondary-container font-bold">PASS PREMIUM ÉTUDIANT — 1000 F/mois, 500 F le 1er mois avec un code promo</p>
         <h4 className="font-bold">Multipliez vos chances de réussite</h4>
         <Link to="/premium" className="mt-3 block text-center h-12 leading-[48px] rounded-xl bg-secondary-container text-[#271900] font-bold">
           S'abonner maintenant

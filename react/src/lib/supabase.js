@@ -24,6 +24,11 @@ export async function edgeFn(name, body) {
     body: JSON.stringify(body || {}),
   });
   const out = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(out.error || `HTTP ${res.status}`);
+  if (!res.ok) {
+    const e = new Error(out.error || `HTTP ${res.status}`);
+    e.code = out.error || null;
+    e.motif = out.motif || null;
+    throw e;
+  }
   return out;
 }

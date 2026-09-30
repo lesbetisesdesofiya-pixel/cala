@@ -1,8 +1,10 @@
 // supabase/functions/mf-pay/index.ts
 // Initie un paiement MoneyFusion pour l'utilisateur CONNECTÉ (JWT vérifié).
-// Tarif dégressif d'appel : 1er mois payé = 500 F, renouvellements = 1000 F.
-// (Un abo n'ayant jamais été payé — y compris essai TEST à 0 F — garde le tarif 500.)
-// POST { phone, name, return_url } -> { url, token, amount }
+// Tarif : 1000 F par défaut ; code promo valide -> montant du code (500 F).
+// Un code fourni mais invalide est REJETÉ (on ne facture jamais 1000 F par
+// surprise à quelqu'un qui a tapé un code). La consommation du code a lieu
+// à l'activation (mf-status / mf-webhook), argent confirmé.
+// POST { phone, name, return_url, promo? } -> { url, token, amount }
 // Crée la subscription en 'pending' (ref = token MoneyFusion), puis la SPA
 // redirige vers `url` (page de paiement). Activation via mf-webhook / mf-status.
 //
@@ -21,6 +23,21 @@ const ok = (o: unknown, s = 200) =>
   new Response(JSON.stringify(o), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 const digits = (s: string) => String(s || "").replace(/\D/g, "");
 
+// Validation d'un code promo SANS le consommer (consommation à l'activation).
+async function checkPromo(admin: ReturnType<typeof createClient>, raw: string, userId: string) {
+  const code = String(raw || "").trim().toUpperCase();
+  if (!code) return { valide: false as const, motif: "vide" };
+  const { data: pc } = await admin.from("promo_codes")
+    .select("id,montant,max_uses,used_count,expires_at,actif").eq("code", code).single();
+  if (!pc) return { valide: false as const, motif: "inconnu" };
+  if (!pc.actif) return { valide: false as const, motif: "desactive" };
+  if (pc.expires_at && new Date(pc.expires_at).getTime() < Date.now()) return { valide: false as const, motif: "expire" };
+  if (pc.max_uses != null && Number(pc.used_count) >= Number(pc.max_uses)) return { valide: false as const, motif: "epuise" };
+  const { data: used } = await admin.from("promo_uses").select("id").eq("code_id", pc.id).eq("user_id", userId).limit(1);
+  if (used && used.length) return { valide: false as const, motif: "deja_utilise" };
+  return { valide: true as const, promo: pc };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return ok({ error: "method" }, 405);
@@ -32,17 +49,22 @@ serve(async (req) => {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return ok({ error: "unauthorized" }, 401);
 
-  const { phone, name, return_url } = await req.json().catch(() => ({}));
+  const { phone, name, return_url, promo } = await req.json().catch(() => ({}));
   const to = "+" + digits(phone);
   if (digits(phone).length < 9 || !String(name || "").trim()) {
     return ok({ error: "phone_name_required" }, 400);
   }
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  // Déjà payé un vrai mois (montant > 0, statut finalisé) ? Sinon : tarif découverte 500.
-  const { data: passe } = await admin.from("subscriptions").select("id")
-    .eq("user_id", user.id).gt("amount", 0).in("status", ["active", "expired"]).limit(1);
-  const amount = passe && passe.length ? 1000 : 500;
+  // Tarif : 1000 F sauf code promo valide (montant du code, en général 500 F).
+  let amount = 1000;
+  let promoCodeId: string | null = null;
+  if (promo && String(promo).trim()) {
+    const chk = await checkPromo(admin, promo, user.id);
+    if (!chk.valide) return ok({ error: "promo_invalide", motif: chk.motif }, 400);
+    amount = Number(chk.promo.montant) || 500;
+    promoCodeId = chk.promo.id;
+  }
   const payRes = await fetch(Deno.env.get("MONEYFUSION_PAY_URL")!, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -61,7 +83,7 @@ serve(async (req) => {
   }
   const { error } = await admin.from("subscriptions").insert({
     user_id: user.id, plan: "mensuel", amount, operator: "MoneyFusion",
-    phone: to, ref: payRes.token, status: "pending",
+    phone: to, ref: payRes.token, status: "pending", promo_code_id: promoCodeId,
   });
   if (error) return ok({ error: "db" }, 500);
   return ok({ url: payRes.url, token: payRes.token, amount });

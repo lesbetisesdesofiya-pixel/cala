@@ -1,8 +1,9 @@
-import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { diffLabel } from "../lib/engine";
 import { sb } from "../lib/supabase";
 import { track } from "../lib/analytics";
+import { matieresDe } from "../lib/referentiel";
 
 export default function Onboarding() {
   const { db, persistOp, reload, recalcServer, toast } = useApp();
@@ -12,9 +13,49 @@ export default function Onboarding() {
   const [confirmDel, setConfirmDel] = useState(null);
   const [busyDel, setBusyDel] = useState(null);
   const [busyTerm, setBusyTerm] = useState(false);
+  const runningRef = useRef(false);
 
   const classes = db.onboarding.classesByCycle[cycle] || [];
   const nb = db.onboarding.options.filter((o) => o.checked).length;
+
+  // Référentiel officiel : chargement AUTOMATIQUE des matières manquantes
+  // à chaque choix de classe (600 ms de stabilisation : si l'élève hésite
+  // entre deux classes, seule la dernière est chargée). Idempotent par nom :
+  // on ne réinsère jamais une matière déjà présente, et une matière supprimée
+  // à la main n'est pas rechargée tant que la classe ne change pas.
+  const chargerAuto = async (cible) => {
+    if (!cible || runningRef.current) return;
+    const ref = matieresDe(cible) || [];
+    const manque = ref.filter(
+      (r) => !db.onboarding.options.some((o) => (o.nom || "").toLowerCase() === r.nom.toLowerCase())
+    );
+    if (!manque.length) return;
+    runningRef.current = true;
+    try {
+      for (const r of manque) {
+        const fields = {
+          nom: r.nom, coef: r.coef, icon: r.icon, groupe: "Tronc commun",
+          difficulte: 3, moyenne: 10, nb_devoirs: 0, checked: true,
+        };
+        await persistOp(
+          { table: "matieres", method: "insert", payload: { user_id: db._uid, ...fields }, touchMoy: true },
+          (d) => {
+            const tmpId = `tmp-${Date.now()}-${r.nom}`;
+            d.matieres.push({ id: tmpId, user_id: db._uid, ...fields, moyenne: 10, nbDevoirs: 0, checked: true, sansNotes: true, provisoire: false, badge: "En attente", type: "moyen" });
+            d.onboarding.options.push({ id: tmpId, nom: fields.nom, coef: fields.coef, icon: fields.icon, groupe: fields.groupe, checked: true, difficulte: fields.difficulte, date_ds: null, date_compo: null });
+          }
+        );
+      }
+      await reload();
+      track("referentiel_loaded", { classe: cible, nb: manque.length, auto: true });
+      toast(`${manque.length} matières de ${cible} ajoutées`);
+    } catch (err) { toast("Erreur : " + err.message); } finally { runningRef.current = false; }
+  };
+  useEffect(() => {
+    if (!classe) return;
+    const t = setTimeout(() => chargerAuto(classe), 600);
+    return () => clearTimeout(t);
+  }, [classe]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleCheck = async (idx, checked) => {
     const opt = db.onboarding.options[idx];
@@ -143,7 +184,7 @@ export default function Onboarding() {
           </div>
           <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-secondary-fixed">{nb} matière{nb > 1 ? "s" : ""} sélectionnée{nb > 1 ? "s" : ""}</span>
         </div>
-        <p className="text-xs text-on-surface-variant">Ajoute tes matières avec le bouton + ci-dessous — <strong>au moins 1 pour continuer</strong>.</p>
+        <p className="text-xs text-on-surface-variant">Les matières officielles de ta classe se chargent toutes seules — décoche celles que tu ne suis pas, ou ajoute-en avec +.</p>
         <div className="p-3.5 rounded-2xl bg-secondary-fixed/40 border border-secondary-container/50 space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-secondary font-bold text-lg fill">warning</span>

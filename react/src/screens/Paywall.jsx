@@ -5,25 +5,47 @@ import { sb, edgeFn } from "../lib/supabase";
 import { savePendingFeuille } from "../lib/feuille";
 import { track } from "../lib/analytics";
 
+const MOTIFS_PROMO = {
+  inconnu: "Code inconnu — vérifie l'orthographe",
+  desactive: "Code désactivé",
+  expire: "Code expiré",
+  epuise: "Code épuisé (quota atteint)",
+  deja_utilise: "Déjà utilisé sur ton compte",
+  vide: "Saisis ton code d'abord",
+};
+
 export function Paywall() {
   const { db, reload, unlock, toast } = useApp();
   const nav = useNavigate();
   const p = db.premium;
   const [busy, setBusy] = useState(null); // 'pay' | 'check' | 'test' | null
-  // 1er mois payé = 500 F, renouvellements = 1000 F (même règle que mf-pay).
-  const [firstMonth, setFirstMonth] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await sb.from("subscriptions").select("id")
-          .eq("user_id", db._uid).gt("amount", 0).in("status", ["active", "expired"]).limit(1);
-        const isFirst = !data || !data.length;
-        setFirstMonth(isFirst);
-        track("paywall_viewed", { premier_mois: isFirst });
-      } catch {}
-    })();
-  }, [db._uid]);
-  const prixAffiche = firstMonth ? 500 : p.prix;
+  // Tarif : 1000 F/mois par défaut ; code promo valide -> montant du code.
+  const [promo, setPromo] = useState(null); // { code, montant } | null
+  const [showPromo, setShowPromo] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoMsg, setPromoMsg] = useState(null);
+  const [busyPromo, setBusyPromo] = useState(false);
+  const prixAffiche = promo ? promo.montant : p.prix;
+  useEffect(() => { track("paywall_viewed", {}); }, []);
+
+  const applyPromo = async () => {
+    const code = promoInput.trim();
+    if (!code) { setPromoMsg({ ok: false, texte: MOTIFS_PROMO.vide }); return; }
+    if (busyPromo) return;
+    setBusyPromo(true);
+    try {
+      const out = await edgeFn("mf-promo-check", { promo: code });
+      if (out.valide) {
+        setPromo({ code: code.toUpperCase(), montant: out.montant });
+        setPromoMsg({ ok: true, texte: `Code ${code.toUpperCase()} : 1er mois à ${out.montant} F` });
+        track("promo_applied", { montant: out.montant });
+      } else {
+        setPromo(null);
+        setPromoMsg({ ok: false, texte: MOTIFS_PROMO[out.motif] || "Code invalide" });
+      }
+    } catch { setPromo(null); setPromoMsg({ ok: false, texte: "Vérification impossible — réessaie" }); }
+    finally { setBusyPromo(false); }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -33,14 +55,20 @@ export function Paywall() {
     const phone = document.getElementById("payPhone").value.trim();
     const name = document.getElementById("payName").value.trim();
     try {
-      track("payment_started", { montant: prixAffiche, renouvellement: !firstMonth });
+      track("payment_started", { montant: prixAffiche, promo: promo ? promo.code : null });
       // Forme chemin (compatible la déclaration dashboard classinote.app/callback) :
       // App.jsx réécrit /callback → #/callback à l'arrivée (HashRouter).
       const return_url = window.location.origin + "/callback";
-      const out = await edgeFn("mf-pay", { phone, name, return_url });
+      const out = await edgeFn("mf-pay", { phone, name, return_url, promo: promo ? promo.code : undefined });
       try { localStorage.setItem("kp_paytoken", out.token); } catch {}
       window.location.href = out.url;
-    } catch (err) { toast("Erreur : " + err.message); } finally { setBusy(null); }
+    } catch (err) {
+      if (err.code === "promo_invalide") {
+        setPromo(null);
+        setPromoMsg({ ok: false, texte: MOTIFS_PROMO[err.motif] || "Code promo refusé — vérifie-le ou paie sans code" });
+        toast("Code promo refusé — corrige-le ou paie sans code");
+      } else toast("Erreur : " + err.message);
+    } finally { setBusy(null); }
   };
 
   const afterPaid = async () => {
@@ -75,7 +103,7 @@ export function Paywall() {
       const out = await edgeFn("mf-status", { token });
       if (out.status === "paid") {
         try { localStorage.removeItem("kp_paytoken"); } catch {}
-        track("payment_succeeded", { montant: prixAffiche, renouvellement: !firstMonth, source: "paywall" });
+        track("payment_succeeded", { montant: prixAffiche, promo: promo ? promo.code : null, source: "paywall" });
         toast("Abonnement actif");
         await afterPaid();
       } else toast("Paiement non reçu pour le moment (" + out.status + ")");
@@ -97,12 +125,12 @@ export function Paywall() {
   return (
     <div className="space-y-4 fade">
       <div className="rounded-2xl bg-gradient-to-br from-secondary-container to-secondary-fixed-dim p-5 text-on-secondary-fixed">
-        <span className="text-[11px] uppercase font-bold">Abonnement requis — sans offre gratuite</span>
+        <span className="text-[11px] uppercase font-bold">Abonnement mensuel</span>
         <div className="text-4xl font-extrabold">{prixAffiche} <span className="text-lg">{p.devise}{p.periode}</span></div>
         <p className="text-xs font-semibold mt-1">
-          {firstMonth
-            ? "Offre découverte : 500 F le 1er mois, puis 1000 F/mois. Paiement Mobile Money via MoneyFusion (Yas, Moov)."
-            : "Paiement Mobile Money via MoneyFusion (Yas, Moov). Toutes les fonctionnalités sont débloquées après paiement."}
+          {promo
+            ? `Code ${promo.code} appliqué : 1er mois à ${promo.montant} F, puis 1000 F/mois.`
+            : "Paiement Mobile Money via MoneyFusion (Yas, Moov). 1er mois à 500 F avec un code promo."}
         </p>
       </div>
       <form onSubmit={submit} className="bg-white rounded-2xl border p-4 space-y-3">
@@ -114,6 +142,29 @@ export function Paywall() {
           <label className="text-sm font-bold">Numéro Mobile Money à débiter</label>
           <input id="payPhone" required inputMode="tel" defaultValue={db.user.phone || ""} placeholder="90 00 00 00" className="mt-1 w-full h-12 rounded-xl border px-4" />
         </div>
+        {!showPromo && !promo ? (
+          <button type="button" onClick={() => setShowPromo(true)} className="text-xs font-bold text-primary underline self-start">
+            J'ai un code promo (1er mois à 500 F)
+          </button>
+        ) : (
+          <div className="space-y-2 rounded-xl bg-slate-50 border p-3">
+            <label className="text-sm font-bold">Code promo</label>
+            <div className="flex gap-2">
+              <input value={promoInput} onChange={(e) => setPromoInput(e.target.value.toUpperCase())} placeholder="Ex : AFFICHE2026"
+                className="flex-1 h-11 rounded-xl border px-3 uppercase font-bold text-sm" />
+              <button type="button" onClick={applyPromo} disabled={busyPromo}
+                className={`px-4 h-11 rounded-xl bg-primary-container text-white text-sm font-bold ${busyPromo ? "opacity-70" : ""}`}>
+                {busyPromo ? "…" : "OK"}
+              </button>
+            </div>
+            {promo && (
+              <button type="button" onClick={() => { setPromo(null); setPromoInput(""); setPromoMsg(null); }} className="text-xs text-slate-500 underline">
+                Retirer le code {promo.code}
+              </button>
+            )}
+            {promoMsg && <p className={`text-xs font-bold ${promoMsg.ok ? "text-emerald-700" : "text-rose-600"}`}>{promoMsg.texte}</p>}
+          </div>
+        )}
         <button disabled={busy === "pay"} className={`w-full h-12 rounded-xl bg-primary-container text-white font-semibold flex items-center justify-center gap-2 ${busy === "pay" ? "opacity-70" : ""}`}>
           {busy === "pay" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : `Payer ${prixAffiche} FCFA`}
         </button>
@@ -196,20 +247,8 @@ export function Callback() {
 export function Premium() {
   const { db } = useApp();
   const p = db.premium;
-  // Même règle que mf-pay : 1er mois à 500 F, puis 1000 F/mois.
-  const [firstMonth, setFirstMonth] = useState(true);
-  useEffect(() => {
-    let stop = false;
-    (async () => {
-      try {
-        const { data } = await sb.from("subscriptions").select("id")
-          .eq("user_id", db._uid).gt("amount", 0).in("status", ["active", "expired"]).limit(1);
-        if (!stop && data && data.length) setFirstMonth(false);
-      } catch {}
-    })();
-    return () => { stop = true; };
-  }, [db._uid]);
-  const prix = firstMonth ? 500 : p.prix;
+  // Tarif : 1000 F/mois ; 1er mois à 500 F avec un code promo (saisi au paywall).
+  const prix = p.prix;
   return (
     <div className="space-y-4 fade">
       <div className="rounded-2xl bg-gradient-to-b from-surface-container-high to-white p-6 text-center border">
@@ -222,7 +261,7 @@ export function Premium() {
       <div className="rounded-2xl bg-gradient-to-br from-secondary-container to-secondary-fixed-dim p-5 text-[#271900]">
         <span className="text-[11px] uppercase font-bold">Accès intégral mensuel</span>
         <div className="text-4xl font-extrabold">{prix} <span className="text-lg">{p.devise}</span><span className="text-sm font-semibold">{p.periode}</span></div>
-        <p className="text-xs font-semibold mt-2 border-t border-black/10 pt-2">{firstMonth ? "Offre découverte : 500 F le 1er mois, puis 1000 F/mois • " : ""}Sans engagement, annulable à tout moment</p>
+        <p className="text-xs font-semibold mt-2 border-t border-black/10 pt-2">500 F le 1er mois avec un code promo • Sans engagement, annulable à tout moment</p>
       </div>
       <div className="space-y-2.5">
         {p.avantages.map((a) => (

@@ -11,7 +11,7 @@ export const APP = { name: "ClassiNote", version: "v2.7.1 (Build 419)", annee: "
 export const CYCLES = ["Collège", "Lycée", "Supérieur"];
 export const CLASSES_PAR_CYCLE = {
   Collège: ["6ème", "5ème", "4ème", "3ème"],
-  Lycée: ["2nde C", "2nde A", "1ère D", "Terminale D", "Terminale C", "Terminale A1", "Terminale A2"],
+  Lycée: ["Seconde A", "Seconde C/D", "Première A", "Première C", "Première D", "Terminale A", "Terminale C", "Terminale D"],
   Supérieur: ["Licence 1", "Licence 2", "Licence 3", "Master 1", "Master 2", "BTS 1", "BTS 2"],
 };
 export const CATEGORIES = [

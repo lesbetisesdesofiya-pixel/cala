@@ -19,7 +19,7 @@ function Phone({ src, alt, cls }) {
 
 const FAQ = [
   { q: "Dois-je payer pour voir mon plan ?", a: "Non : ton plan se calcule et s'affiche gratuitement. L'abonnement sert à le sauvegarder et à activer le suivi (comparaison réel vs plan, recalcul automatique)." },
-  { q: "Comment je paie ?", a: "Par Mobile Money (Yas et Moov) directement dans l'app. Premier mois à 500 F, puis 1000 F par mois, sans engagement." },
+  { q: "Comment je paie ?", a: "Par Mobile Money (Yas et Moov) directement dans l'app. 1000 F par mois, sans engagement — et 500 F le 1er mois avec un code promo." },
   { q: "Je n'ai pas encore de notes, ça marche ?", a: "Oui. Le plan se construit à partir de tes matières, coefficients et difficultés, avec une base neutre. Dès ta première note, le suivi démarre." },
   { q: "Puis-je arrêter quand je veux ?", a: "Oui, sans engagement : à la fin de ta période payée, le service s'arrête simplement. Tes données restent consultables." },
   { q: "Mes données sont-elles en sécurité ?", a: "Tes notes et infos ne sont visibles que par toi, ne sont jamais revendues, et tu peux demander leur suppression à tout moment." },
@@ -189,7 +189,7 @@ export default function Landing() {
         <div className="ld-blob ld-blob-1" /><div className="ld-blob ld-blob-2" />
         <div className="ld-hero-grid">
           <div>
-            <span className="ld-pill" data-ldhero><span className="ld-dot" />1er mois à 500 F — puis 1000 F/mois</span>
+            <span className="ld-pill" data-ldhero><span className="ld-dot" />1000 F/mois — 1er mois à 500 F avec un code promo</span>
             <h1 className="ld-h1" data-ldhero>Ton plan pour décrocher <span className="ld-hl">ta mention<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M2 9 Q 50 2 100 7 T 198 5" stroke="#ffb702" strokeWidth="5" fill="none" strokeLinecap="round" /></svg></span></h1>
             <p className="ld-lead" data-ldhero>ClassiNote calcule la note exacte à viser dans chaque matière, suit tes résultats et te dit quoi faire avant chaque épreuve. Fini les approximations.</p>
             <div className="ld-hero-cta" data-ldhero>
@@ -320,8 +320,8 @@ export default function Landing() {
           <p className="ld-sub ld-reveal" style={{ marginLeft: "auto", marginRight: "auto" }}>Un répétiteur coûte 5 000 à 15 000 F par mois. ClassiNote, c'est ton plan de réussite pour le prix d'un goûter.</p>
         </div>
         <div className="ld-price-card ld-reveal">
-          <span className="ld-price-tag">Offre découverte</span>
-          <div className="ld-price-big">500 F <small>le 1er mois, puis 1000 F/mois</small></div>
+          <span className="ld-price-tag">Sans engagement</span>
+          <div className="ld-price-big">1000 F <small>/mois — 500 F le 1er mois avec un code promo</small></div>
           <ul className="ld-price-list">
             <li><Tick />Plan de réussite illimité</li>
             <li><Tick />Suivi réel vs plan + recalcul auto</li>
@@ -351,7 +351,7 @@ export default function Landing() {
       <section className="ld-sec ld-wrap">
         <div className="ld-final ld-reveal">
           <h2 className="ld-h2">Prêt à viser ta mention ?</h2>
-          <p>Crée ton compte en 2 minutes, fixe ton objectif, reçois ton plan. Premier mois à 500 F.</p>
+          <p>Crée ton compte en 2 minutes, fixe ton objectif, reçois ton plan. 1000 F/mois, 500 F le 1er mois avec un code promo.</p>
           <Link className="ld-btn ld-btn-gold ld-btn-lg" to="/register" onClick={() => track("landing_cta_clicked", { cta: "final" })}>Créer mon plan maintenant</Link>
         </div>
       </section>

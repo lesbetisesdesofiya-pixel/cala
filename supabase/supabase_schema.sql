@@ -339,6 +339,39 @@ alter table profiles add column if not exists regime text default 'Trimestre';
 alter table profiles add column if not exists periode text default 'Trimestre 1';
 alter table profiles add column if not exists objectif_portee text default 'annuel'
   check (objectif_portee in ('annuel', 'trimestre'));
+
+-- ============ CODES PROMO (1er mois à tarif réduit) ============
+-- Règle : sans code = 1000 F ; code valide = montant du code (500 F).
+-- Usage unique par élève et par code (promo_uses), quotas + expiration.
+-- Validation côté serveur uniquement (edge functions, service_role).
+create table if not exists promo_codes (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null,
+  montant int not null default 500,
+  max_uses int,
+  used_count int not null default 0,
+  expires_at timestamptz,
+  actif boolean not null default true,
+  created_at timestamptz default now()
+);
+create table if not exists promo_uses (
+  id uuid primary key default gen_random_uuid(),
+  code_id uuid not null references promo_codes(id) on delete cascade,
+  user_id uuid not null,
+  subscription_id uuid references subscriptions(id) on delete set null,
+  created_at timestamptz default now(),
+  unique(code_id, user_id)
+);
+alter table subscriptions add column if not exists promo_code_id uuid references promo_codes(id) on delete set null;
+alter table promo_codes enable row level security;
+alter table promo_uses enable row level security;
+-- Pas de policy client : seul le service_role (fonctions mf-*) lit et écrit.
+-- Incrément du compteur (quotas approximatifs en cas d'activations concurrentes).
+create or replace function promo_consume(p_code uuid)
+returns void language sql security definer as
+$$ update promo_codes set used_count = used_count + 1 where id = p_code $$;
+-- Exemple (à adapter) : insert into promo_codes(code, montant, max_uses, expires_at)
+-- values ('AFFICHE2026', 500, 500, now() + interval '90 days');
 alter table notes add column if not exists trimestre text;
 -- Backfill : les notes existantes vont à la période 1 du régime de l'élève.
 update notes n set trimestre = (

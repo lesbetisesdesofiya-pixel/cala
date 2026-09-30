@@ -21,17 +21,7 @@ export default function Feuille() {
     abonnementActif().then((v) => { if (!stop) setIsSub(v); }).catch(() => { if (!stop) setIsSub(null); });
     return () => { stop = true; };
   }, [abonnementActif]);
-  // 1er mois payé = 500 F, ensuite 1000 F/mois (même règle que mf-pay).
-  const [firstMonth, setFirstMonth] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await sb.from("subscriptions").select("id")
-          .eq("user_id", db._uid).gt("amount", 0).in("status", ["active", "expired"]).limit(1);
-        if (data && data.length) setFirstMonth(false);
-      } catch {}
-    })();
-  }, [db._uid]);
+  // Tarif paywall : 1000 F/mois, 500 F le 1er mois avec un code promo.
   // Objectif de l'utilisateur (annuel ou de période selon réglage), toujours entier.
   // Le brouillon n'est repris que s'il correspond au contexte actuel
   // (même période, même portée, même objectif) : sinon, un vieux stash
@@ -358,7 +348,7 @@ export default function Feuille() {
               {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
               <span className="material-symbols-outlined text-2xl">lock_open</span>
               <span>Activer mon suivi</span>
-              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">{firstMonth ? "500 F" : "1000 F"}</span>
+              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F</span>
               </>)}
             </button>
             <Link to="/notes" className="block text-center text-xs text-slate-500 underline">Continuer sans sauvegarder</Link>
@@ -379,7 +369,7 @@ export default function Feuille() {
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : isSub === false ? (<>
             <span className="material-symbols-outlined text-2xl">lock_open</span>
             <span>Activer mon suivi</span>
-            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">{firstMonth ? "500 F/mois" : "1000 F/mois"}</span>
+            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F/mois</span>
             </>) : (<>
             <span className="material-symbols-outlined text-2xl">save</span>
             <span>Activer mon suivi</span>

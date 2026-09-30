@@ -1,0 +1,17 @@
+{
+  "name": "ClassiNote Affiliation",
+  "short_name": "Affiliation",
+  "description": "Parraine des élèves et gagne 20 % de leurs abonnements. Retraits Mobile Money.",
+  "start_url": "./#/affiliation/dashboard",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "fr",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

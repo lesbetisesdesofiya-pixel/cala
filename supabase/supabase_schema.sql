@@ -372,6 +372,58 @@ returns void language sql security definer as
 $$ update promo_codes set used_count = used_count + 1 where id = p_code $$;
 -- Exemple (à adapter) : insert into promo_codes(code, montant, max_uses, expires_at)
 -- values ('AFFICHE2026', 500, 500, now() + interval '90 days');
+
+-- ============ AFFILIATION ============
+-- Un affilié = un compte auth + code promo à 6 chiffres (montant 500 F).
+-- Commission : commission_pct % du 1er paiement du filleul, une seule fois
+-- (le code étant à usage unique par élève, les renouvellements ne rapportent pas).
+-- Retraits : l'affilié demande (aff-withdraw) -> ligne payouts 'pending' ->
+-- le worker VPS (IP fixe whitelistée chez MoneyFusion) initie le versement ->
+-- webhook mf-payout-webhook finalise. Frais 2,5 % déduits du montant demandé.
+-- Solde = sum(gains) - sum(retraits non annulés).
+create table if not exists affiliates (
+  id uuid primary key,
+  code_promo text unique not null,
+  prenom text,
+  nom text,
+  phone text unique,
+  payout_phone text,
+  payout_mode text,
+  created_at timestamptz default now()
+);
+alter table promo_codes add column if not exists affiliate_id uuid references affiliates(id) on delete set null;
+alter table promo_codes add column if not exists commission_pct int not null default 20;
+create table if not exists affiliate_earnings (
+  id uuid primary key default gen_random_uuid(),
+  affiliate_id uuid not null references affiliates(id) on delete cascade,
+  subscription_id uuid not null unique references subscriptions(id) on delete cascade,
+  filleul_user_id uuid not null,
+  amount int not null,
+  pct int not null,
+  created_at timestamptz default now()
+);
+create table if not exists payouts (
+  id uuid primary key default gen_random_uuid(),
+  affiliate_id uuid not null references affiliates(id) on delete cascade,
+  amount int not null,
+  frais int not null,
+  net int not null,
+  phone text not null,
+  mode text not null,
+  country text not null default 'tg',
+  tokenpay text,
+  status text not null default 'pending',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+alter table affiliates enable row level security;
+drop policy if exists "affiliates_own_read" on affiliates;
+create policy "affiliates_own_read" on affiliates for select using (auth.uid() = id);
+drop policy if exists "affiliates_own_upd" on affiliates;
+create policy "affiliates_own_upd" on affiliates for update using (auth.uid() = id) with check (auth.uid() = id);
+alter table affiliate_earnings enable row level security;
+alter table payouts enable row level security;
+-- Pas de policy client sur earnings/payouts : lecture via edge functions.
 alter table notes add column if not exists trimestre text;
 -- Backfill : les notes existantes vont à la période 1 du régime de l'élève.
 update notes n set trimestre = (

@@ -22,6 +22,7 @@ import AddNote from "./screens/AddNote";
 import AddDevoir from "./screens/AddDevoir";
 import AddTransaction from "./screens/AddTransaction";
 import Matiere from "./screens/Matiere";
+import { Affiliation, AffLogin, AffRegister, AffDashboard } from "./screens/Affiliation";
 
 const PAYANT = new Set([
   "/notes", "/objectifs", "/devoirs", "/budget", "/evolution",
@@ -32,11 +33,13 @@ const PAYANT = new Set([
 const ONB_ALLOW = new Set([
   "/login", "/register", "/onboarding", "/matiere",
   "/legal", "/pin", "/pin-choice", "/lock",
+  "/affiliation", "/affiliation/login", "/affiliation/register", "/affiliation/dashboard",
 ]);
 const FREE_SANS_ABO = new Set([
   "/login", "/register", "/onboarding", "/objectif", "/feuille-route",
   "/paywall", "/callback", "/legal", "/pin", "/pin-choice", "/lock", "/matiere",
   "/me", "/profil", // profil toujours accessible, abonné ou pas
+  "/affiliation", "/affiliation/login", "/affiliation/register", "/affiliation/dashboard",
 ]);
 // Sans abonnement (onboarding terminé) : parcours objectif/feuille locale + paywall.
 // Tout le reste renvoie vers la feuille de route.
@@ -61,6 +64,10 @@ const BACK_TITLES = {
   "/feuille-route": ["Ton Plan de Réussite", "Feuille de route"],
   "/callback": ["Paiement", "Confirmation"],
   "/legal": ["Infos légales", "ClassiNote"],
+  "/affiliation": ["Affiliation", "Parrainage"],
+  "/affiliation/login": ["Affiliation", "Connexion"],
+  "/affiliation/register": ["Affiliation", "Inscription"],
+  "/affiliation/dashboard": ["Espace affilié", "Tableau de bord"],
 };
 
 function Guard({ children }) {
@@ -183,6 +190,9 @@ function Shell() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/legal" element={<Legal />} />
+            <Route path="/affiliation" element={<Affiliation />} />
+            <Route path="/affiliation/login" element={<AffLogin />} />
+            <Route path="/affiliation/register" element={<AffRegister />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
@@ -217,6 +227,10 @@ function Shell() {
           <Route path="/lock" element={<Lock />} />
           <Route path="/matiere" element={<Guard><Matiere /></Guard>} />
           <Route path="/callback" element={<Callback />} />
+          <Route path="/affiliation" element={<Affiliation />} />
+          <Route path="/affiliation/login" element={<AffLogin />} />
+          <Route path="/affiliation/register" element={<AffRegister />} />
+          <Route path="/affiliation/dashboard" element={<AffDashboard />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<Navigate to="/login" replace />} />
@@ -279,6 +293,16 @@ function Analytics() {
     if (uid) identify(uid);
     else resetIdentity();
   }, [uid]);
+  // PWA affiliation séparée : sur /affiliation*, le manifest installé est
+  // celui de l'espace affilié (icône + nom + démarrage dédiés).
+  useEffect(() => {
+    try {
+      const link = document.querySelector('link[rel="manifest"]');
+      const aff = loc.pathname.startsWith("/affiliation");
+      if (link) link.setAttribute("href", aff ? "./manifest-affiliation.json" : "./manifest.json");
+      document.title = aff ? "ClassiNote Affiliation" : "ClassiNote — Assistant Scolaire & Budget";
+    } catch {}
+  }, [loc.pathname]);
   return null;
 }
 

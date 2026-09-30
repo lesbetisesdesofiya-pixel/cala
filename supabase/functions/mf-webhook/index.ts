@@ -76,5 +76,20 @@ async function activate(sb: ReturnType<typeof createClient>, subId: string, user
       await sb.rpc("promo_consume", { p_code: promoCodeId });
     }
   }
+  // Affiliation : commission une seule fois (contrainte unique par abo).
+  if (promoCodeId) {
+    const { data: pc } = await sb.from("promo_codes").select("affiliate_id,commission_pct").eq("id", promoCodeId).single();
+    if (pc?.affiliate_id) {
+      const { data: s } = await sb.from("subscriptions").select("amount").eq("id", subId).single();
+      const pct = Number(pc.commission_pct ?? 20);
+      const gain = Math.max(0, Math.round(Number(s?.amount || 0) * pct / 100));
+      if (gain) {
+        await sb.from("affiliate_earnings").upsert(
+          { affiliate_id: pc.affiliate_id, subscription_id: subId, filleul_user_id: userId, amount: gain, pct },
+          { onConflict: "subscription_id", ignoreDuplicates: true }
+        );
+      }
+    }
+  }
   return new Response("ok");
 }

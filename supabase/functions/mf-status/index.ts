@@ -26,6 +26,23 @@ async function activate(admin: ReturnType<typeof createClient>, subId: string, u
   await admin.from("profiles").update({ formule: "Premium" }).eq("id", userId);
   // Code promo : consommation à l'activation (argent confirmé), idempotente.
   if (promoCodeId) await consumePromo(admin, promoCodeId, userId, subId);
+  // Affiliation : commission une seule fois (contrainte unique par abo).
+  if (promoCodeId) await creditAffiliate(admin, promoCodeId, subId, userId);
+}
+
+// Commission affilié : pct % du montant payé, une seule fois par abonnement
+// (idempotent via contrainte unique sur subscription_id).
+async function creditAffiliate(admin: ReturnType<typeof createClient>, codeId: string, subId: string, userId: string) {
+  const { data: pc } = await admin.from("promo_codes").select("affiliate_id,commission_pct").eq("id", codeId).single();
+  if (!pc?.affiliate_id) return;
+  const { data: s } = await admin.from("subscriptions").select("amount").eq("id", subId).single();
+  const pct = Number(pc.commission_pct ?? 20);
+  const gain = Math.max(0, Math.round(Number(s?.amount || 0) * pct / 100));
+  if (!gain) return;
+  await admin.from("affiliate_earnings").upsert(
+    { affiliate_id: pc.affiliate_id, subscription_id: subId, filleul_user_id: userId, amount: gain, pct },
+    { onConflict: "subscription_id", ignoreDuplicates: true }
+  );
 }
 
 // Enregistre l'usage d'un code (unique par élève, contrainte DB) et incrémente

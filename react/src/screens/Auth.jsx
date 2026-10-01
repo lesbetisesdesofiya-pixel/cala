@@ -89,7 +89,7 @@ export function Login() {
         <Link to="/register" className="w-full h-12 rounded-xl border-2 border-primary-container text-primary font-bold text-sm flex items-center justify-center gap-2">
           Créer un compte — s'inscrire
         </Link>
-        <p className="text-center text-xs text-on-surface-variant">Nouveau ici ? Crée ton compte avec ton numéro, puis abonne-toi (500 FCFA/mois).</p>
+        <p className="text-center text-xs text-on-surface-variant">Nouveau ici ? Crée ton compte avec ton numéro, puis abonne-toi (1000 FCFA/mois).</p>
       </form>
     </div>
   );

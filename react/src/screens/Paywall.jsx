@@ -10,7 +10,7 @@ export function Paywall() {
   const nav = useNavigate();
   const p = db.premium;
   const [busy, setBusy] = useState(null); // 'pay' | 'check' | 'test' | null
-  // Tarif unique : 500 F/mois, sans promo.
+  // Tarif unique : 1000 F/mois, sans promo.
   const prixAffiche = p.prix;
   useEffect(() => { track("paywall_viewed", {}); }, []);
 
@@ -129,7 +129,7 @@ export function Paywall() {
           <input id="payPhone" required inputMode="tel" defaultValue={db.user.phone || ""} placeholder="90 00 00 00" className="mt-1 w-full h-12 rounded-xl border px-4" />
         </div>
         <button disabled={busy === "pay"} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container text-primary font-extrabold flex items-center justify-center gap-2 shadow-xl ${busy === "pay" ? "opacity-70" : ""}`}>
-          {busy === "pay" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "Activer 500 F"}
+          {busy === "pay" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "Activer 1000 F"}
         </button>
         <button type="button" onClick={check} disabled={busy === "check"} className={`w-full h-11 rounded-xl bg-secondary-container font-bold text-primary text-sm flex items-center justify-center gap-2 ${busy === "check" ? "opacity-70" : ""}`}>
           {busy === "check" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "J'ai payé — vérifier mon abonnement"}
@@ -212,7 +212,7 @@ export function Callback() {
 export function Premium() {
   const { db } = useApp();
   const p = db.premium;
-  // Tarif unique : 500 F/mois, sans promo.
+  // Tarif unique : 1000 F/mois, sans promo.
   const prix = p.prix;
   return (
     <div className="space-y-4 fade">

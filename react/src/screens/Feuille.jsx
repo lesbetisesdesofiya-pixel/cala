@@ -21,7 +21,7 @@ export default function Feuille() {
     abonnementActif().then((v) => { if (!stop) setIsSub(v); }).catch(() => { if (!stop) setIsSub(null); });
     return () => { stop = true; };
   }, [abonnementActif]);
-  // Tarif unique : 500 F/mois, sans promo.
+  // Tarif unique : 1000 F/mois, sans promo.
   // Objectif de l'utilisateur (annuel ou de période selon réglage), toujours entier.
   // Le brouillon n'est repris que s'il correspond au contexte actuel
   // (même période, même portée, même objectif) : sinon, un vieux stash
@@ -307,7 +307,7 @@ export default function Feuille() {
           <button onClick={save} disabled={busySave} className={`w-full min-h-[3.5rem] py-3 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-[15px] leading-snug text-center flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
               <span>Je veux atteindre {fmtPlan(viseeBouton)}</span>
-              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
+              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F</span>
             </>)}
           </button>
           ) : (<>
@@ -325,7 +325,7 @@ export default function Feuille() {
           <button onClick={save} disabled={busySave} className={`w-full min-h-[3.5rem] py-3 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-[15px] leading-snug flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : isSub === false ? (<>
             <span>Je commence à suivre mes notes</span>
-            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
+            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F</span>
             </>) : (<>
             <span className="material-symbols-outlined text-2xl">save</span>
             <span>Enregistrer</span>

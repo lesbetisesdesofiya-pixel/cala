@@ -151,7 +151,7 @@ export default function Me() {
       </section>
 
       <section className="rounded-2xl bg-primary-container text-white p-5">
-        <p className="text-xs text-secondary-container font-bold">PASS PREMIUM ÉTUDIANT — 500 F/mois, sans engagement</p>
+        <p className="text-xs text-secondary-container font-bold">PASS PREMIUM ÉTUDIANT — 1000 F/mois, sans engagement</p>
         <h4 className="font-bold">Multipliez vos chances de réussite</h4>
         <Link to="/paywall" className="mt-3 block text-center h-12 leading-[48px] rounded-xl bg-secondary-container text-[#271900] font-bold">
           Gérer mon abonnement

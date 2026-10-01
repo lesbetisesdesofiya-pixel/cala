@@ -249,7 +249,7 @@ export function AffDashboard() {
         <div className="flex gap-2 justify-center mt-3">
           <button onClick={() => { try { navigator.clipboard.writeText(data.code); toast("Code copié"); } catch {} }}
             className="px-4 h-10 rounded-xl bg-white/10 border border-white/20 text-xs font-bold">Copier</button>
-          <a href={`https://wa.me/?text=${encodeURIComponent(`Rejoins ClassiNote avec mon code ${data.code} (500 F/mois) : https://classinote.app/#/register?ref=${data.code}`)}`}
+          <a href={`https://wa.me/?text=${encodeURIComponent(`Rejoins ClassiNote avec mon code ${data.code} (1000 F/mois) : https://classinote.app/#/register?ref=${data.code}`)}`}
             target="_blank" rel="noreferrer" className="px-4 h-10 rounded-xl bg-emerald-600 text-xs font-bold flex items-center">
             Partager sur WhatsApp
           </a>

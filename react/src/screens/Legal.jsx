@@ -18,7 +18,7 @@ export default function Legal() {
         <h2 className="font-extrabold text-lg text-primary">Conditions Générales d'Utilisation</h2>
         <p><strong>1. Objet.</strong> Suivi notes, devoirs, objectifs et budget ; prévisions purement <strong>indicatives</strong>.</p>
         <p><strong>2. Compte.</strong> Numéro WhatsApp vérifié + PIN à 4 chiffres. Les <strong>mineurs</strong> s'inscrivent avec l'accord d'un parent ou tuteur.</p>
-        <p><strong>3. Abonnement.</strong> 500 F/mois. Sans abonnement actif, les écritures sont bloquées. Sans engagement, <strong>sans remboursement au prorata</strong>.</p>
+        <p><strong>3. Abonnement.</strong> 1000 F/mois. Sans abonnement actif, les écritures sont bloquées. Sans engagement, <strong>sans remboursement au prorata</strong>.</p>
         <p><strong>4. Paiement.</strong> Mobile Money (Yas, Moov). Activation à confirmation de l'opérateur.</p>
         <p><strong>5. Exactitude.</strong> Estimations pédagogiques <strong>sans garantie</strong> de mention ni de résultat.</p>
         <p><strong>6. Bon usage.</strong> Interdits : partage massif, contournement du paywall, attaques. Sanction : suspension puis suppression, sans remboursement.</p>

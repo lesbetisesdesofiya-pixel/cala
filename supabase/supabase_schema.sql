@@ -340,8 +340,8 @@ alter table profiles add column if not exists periode text default 'Trimestre 1'
 alter table profiles add column if not exists objectif_portee text default 'annuel'
   check (objectif_portee in ('annuel', 'trimestre'));
 
--- ============ CODES PROMO (500 F + attribution parrainage) ============
--- Tarif unique 500 F : le code ne change plus le prix, il crédite l'affilié.
+-- ============ CODES PROMO (attribution parrainage, prix unique 1000 F) ============
+-- Plus de remise : le code ne change pas le prix, il crédite l'affilié.
 -- Parrainage par lien : ?ref=CODE au register -> profiles.ref_code ->
 -- mf-pay rattache la souscription (best-effort, jamais bloquant).
 create table if not exists promo_codes (
@@ -411,7 +411,7 @@ create policy "subscriptions_admin_all" on subscriptions for all using (
 );
 
 -- ============ AFFILIATION ============
--- Un affilié = un compte auth + code promo à 6 chiffres (montant 500 F).
+-- Un affilié = un compte auth + code promo à 6 chiffres (commission 25 % = 250 F).
 -- Commission : commission_pct % du 1er paiement du filleul, une seule fois
 -- (le code étant à usage unique par élève, les renouvellements ne rapportent pas).
 -- Retraits : l'affilié demande (aff-withdraw) -> ligne payouts 'pending' ->

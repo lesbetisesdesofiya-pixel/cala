@@ -1,6 +1,6 @@
 // supabase/functions/mf-pay/index.ts
 // Initie un paiement MoneyFusion pour l'utilisateur CONNECTÉ (JWT vérifié).
-// Tarif unique : 500 F/mois, avec ou sans code (plus de promo à saisir).
+// Tarif unique : 1000 F/mois, sans promo ni remise.
 // Attribution parrainage (best-effort, jamais bloquante) : code passé en
 // param OU code ref stocké au register (?ref=) -> promo_code_id sur la
 // souscription -> commissions affilié/manager à l'activation.
@@ -56,10 +56,11 @@ serve(async (req) => {
   }
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  // Tarif unique 500 F. Attribution parrain : param promo explicite, sinon
-  // code ref du profil (?ref= au register). Invalide/déjà utilisé -> on paie
-  // 500 plein sans bloquer (le parrainage ne doit jamais empêcher de payer).
-  let amount = 500;
+  // Tarif unique 1000 F, sans promo ni remise.
+  // Attribution parrainage conservée (best-effort, jamais bloquante) : param
+  // promo explicite, sinon code ref du profil (?ref= au register).
+  // Invalide/déjà utilisé -> on paie 1000 plein SANS attribution.
+  let amount = 1000;
   let promoCodeId: string | null = null;
   let refCode: string | null = null;
   try {
@@ -69,10 +70,8 @@ serve(async (req) => {
   const codeIn = (promo && String(promo).trim()) || refCode;
   if (codeIn) {
     const chk = await checkPromo(admin, codeIn, user.id);
-    if (chk.valide) {
-      amount = Number(chk.promo.montant) || 500;
-      promoCodeId = chk.promo.id;
-    }
+    // Valide -> attribution seule (le prix reste 1000 dans tous les cas).
+    if (chk.valide) promoCodeId = chk.promo.id;
   }
   const payRes = await fetch(Deno.env.get("MONEYFUSION_PAY_URL")!, {
     method: "POST",

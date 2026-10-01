@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { idb } from "../lib/offline";
 import { useApp } from "../lib/store";
+import { isTikTok, isAndroid, openExternal } from "../lib/webview";
 
 export function NetBar() {
   const [state, setState] = useState({ off: !navigator.onLine, n: 0 });
@@ -26,6 +27,40 @@ export function NetBar() {
   return (
     <div className={`mx-4 mt-2 px-3 py-2 rounded-xl text-xs font-bold text-center ${off ? "bg-amber-100 text-amber-800" : "bg-sky-100 text-sky-800"}`}>
       {off ? `Hors ligne${n ? ` — ${n} action${n > 1 ? "s" : ""} en attente de synchro` : ""}` : `${n} action${n > 1 ? "s" : ""} à synchroniser…`}
+    </div>
+  );
+}
+
+// Webview TikTok : pas d'installation PWA possible + risque de perdre le
+// contexte au retour paiement. Bannière de sortie vers le vrai navigateur
+// (renvoyée une fois dismissée).
+export function TikTokBar() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    try {
+      if (isTikTok() && !localStorage.getItem("kp_webview_ok")) setVisible(true);
+    } catch {
+      if (isTikTok()) setVisible(true);
+    }
+  }, []);
+  if (!visible) return null;
+  const close = () => {
+    try { localStorage.setItem("kp_webview_ok", "1"); } catch {}
+    setVisible(false);
+  };
+  const android = isAndroid();
+  return (
+    <div className="mx-4 mt-2 px-3 py-2.5 rounded-xl bg-primary-container text-white flex items-center gap-2.5">
+      <span className="material-symbols-outlined text-secondary-container shrink-0">open_in_new</span>
+      <p className="flex-1 text-[11px] font-semibold leading-snug">
+        Tu es dans TikTok : ouvre dans {android ? "Chrome" : "Safari (menu ···)"} pour payer et installer l'app.
+      </p>
+      {android && (
+        <button onClick={openExternal} className="px-3 h-9 rounded-xl bg-secondary-container text-[#271900] text-[11px] font-extrabold shrink-0">
+          Ouvrir
+        </button>
+      )}
+      <button onClick={close} aria-label="Fermer" className="text-slate-300 font-bold shrink-0">x</button>
     </div>
   );
 }
@@ -67,6 +102,8 @@ export function PwaBanner() {
       try { await d.userChoice; } catch {}
       window.__pwaDeferred = null;
       setCanInstall(false);
+    } else if (isTikTok()) {
+      toast("Ouvre cette page dans Chrome (Android) ou Safari (iPhone) via ··· puis installe l'app");
     } else toast("Menu du navigateur > Installer l'application (ou Ajouter à l'écran d'accueil)");
   };
   const close = () => {

@@ -4,7 +4,7 @@ import { AppProvider, useApp } from "./lib/store";
 import { sb } from "./lib/supabase";
 import { initAnalytics, capturePageview, identify, resetIdentity } from "./lib/analytics";
 import { TopBar, TopBack, BottomNav } from "./components/chrome";
-import { NetBar, PwaBanner } from "./components/system";
+import { NetBar, PwaBanner, TikTokBar } from "./components/system";
 import Notes from "./screens/Notes";
 import Me from "./screens/Me";
 import Devoirs from "./screens/Devoirs";
@@ -166,6 +166,7 @@ function Shell() {
     return (
       <div className="min-h-screen flex flex-col relative">
         <NetBar />
+        <TikTokBar />
         <main className="flex-1"><Landing /></main>
         <PwaBanner />
       </div>
@@ -188,6 +189,7 @@ function Shell() {
       return (
         <div className="min-h-screen flex flex-col relative">
           <NetBar />
+          <TikTokBar />
           <main className="flex-1"><Landing /></main>
           <PwaBanner />
         </div>
@@ -197,6 +199,7 @@ function Shell() {
       <div className="max-w-lg mx-auto min-h-screen flex flex-col relative bg-white sm:border-x sm:border-white/10 sm:shadow-[0_0_90px_rgba(0,0,0,0.45)]">
         {back && <TopBack titre={back[0]} sous={back[1]} />}
         <NetBar />
+        <TikTokBar />
         <main className="flex-1 px-4 pt-4 pb-16">
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -218,6 +221,7 @@ function Shell() {
     <div className="max-w-lg mx-auto min-h-screen flex flex-col relative bg-white sm:border-x sm:border-white/10 sm:shadow-[0_0_90px_rgba(0,0,0,0.45)]">
       {!isReader && (back ? <TopBack titre={back[0]} sous={back[1]} /> : <TopBar />)}
       <NetBar />
+      <TikTokBar />
       <main className="flex-1 px-4 pt-4 pb-36">
         <Routes>
           <Route path="/notes" element={<Guard><Notes /></Guard>} />

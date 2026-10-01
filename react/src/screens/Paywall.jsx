@@ -189,7 +189,12 @@ export function Callback() {
           nav("/notes");
         }
       } else toast("Paiement " + out.status + " — finalise sur la page MoneyFusion puis reviens.");
-    } catch (err) { toast("Erreur : " + err.message); }
+    } catch (err) {
+      // Session perdue (ex. retour dans un autre navigateur que celui du paiement,
+      // fréquent depuis la webview TikTok) : reconnecte-toi puis re-vérifie.
+      if (err.message === "Non connecté") toast("Session perdue — reconnecte-toi puis reviens vérifier ton paiement");
+      else toast("Erreur : " + err.message);
+    }
   };
 
   useEffect(() => {

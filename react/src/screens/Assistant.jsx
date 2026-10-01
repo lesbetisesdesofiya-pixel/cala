@@ -49,7 +49,7 @@ export default function Assistant() {
   const b = bandeMention(db, dial);
 
   const classes = db.onboarding.classesByCycle[cycle] || [];
-  const nb = db.onboarding.options.filter((o) => o.checked).length;
+  const nb = db.onboarding.options.length;
   const ETAPES = ["Classe", "Matières", "Objectif"];
 
   const goto = (s) => {
@@ -94,21 +94,6 @@ export default function Assistant() {
     const t = setTimeout(() => chargerAuto(classe), 600);
     return () => clearTimeout(t);
   }, [classe]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const toggleCheck = async (idx, checked) => {
-    const opt = db.onboarding.options[idx];
-    const r = await persistOp(
-      { table: "matieres", method: "update", payload: { checked }, match: { id: opt.id } },
-      (d) => {
-        const o = d.onboarding.options[idx];
-        if (o) o.checked = checked;
-        const m = d.matieres.find((x) => x.id === opt.id);
-        if (m) m.checked = checked;
-      }
-    ).catch((e) => { toast("Erreur : " + e.message); return null; });
-    if (!r) return;
-    if (!r.queued) await reload();
-  };
 
   const setDiff = async (idx, d) => {
     const opt = db.onboarding.options[idx];
@@ -263,28 +248,24 @@ export default function Assistant() {
 
       {step === 2 && (
         <section className="space-y-3 fade">
-          <div className="flex items-center justify-between">
-            <h2 className="font-bold text-primary">Tes matières de {classe || "…"} <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-secondary-fixed ml-1">{nb}</span></h2>
-          </div>
-          <p className="text-xs text-on-surface-variant">Elles se chargent toutes seules — décoche celles que tu ne suis pas, ou ajoute-en.</p>
+          <h2 className="text-[22px] leading-7 font-extrabold text-primary tracking-tight">Dis-nous la difficulté de chaque matière</h2>
+          <p className="text-xs text-on-surface-variant -mt-1">Tes matières de {classe || "…"} • {nb} • la poubelle supprime, le crayon modifie.</p>
           <div className="space-y-2.5">
             {!db.onboarding.options.length && (
               <p className="text-xs text-on-surface-variant text-center py-4">Chargement des matières…</p>
             )}
             {db.onboarding.options.map((o, i) => (
-              <div key={o.id} className={`p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-card space-y-2.5 ${o.checked ? "" : "opacity-75"}`}>
+              <div key={o.id} className="p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-card space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <label className="flex items-center gap-3.5 flex-1 cursor-pointer min-w-0">
-                    <input type="checkbox" checked={!!o.checked} onChange={(e) => toggleCheck(i, e.target.checked)}
-                      className="w-5 h-5 rounded-md accent-[#0f2942] cursor-pointer shrink-0" />
-                    <div className={`w-10 h-10 rounded-xl ${o.checked ? "bg-surface-container text-primary" : "bg-surface-container-low text-on-surface-variant"} flex items-center justify-center shrink-0`}>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-surface-container text-primary flex items-center justify-center shrink-0">
                       <span className="material-symbols-outlined text-[20px]">{o.icon}</span>
                     </div>
                     <div className="min-w-0">
-                      <h3 className={`text-sm truncate ${o.checked ? "font-semibold text-primary" : "font-medium"}`}>{o.nom}</h3>
+                      <h3 className="text-sm truncate font-semibold text-primary">{o.nom}</h3>
                       <span className="text-[11px] text-on-surface-variant">Coef. {o.coef}</span>
                     </div>
-                  </label>
+                  </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Link to={`/matiere?edit=${o.id}`} title="Modifier"
                       className="w-9 h-9 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary flex items-center justify-center active:scale-95">
@@ -328,21 +309,17 @@ export default function Assistant() {
                   <button type="button" onClick={() => setNewCoef((c) => Math.min(12, c + 1))} className="w-10 h-10 rounded-lg bg-slate-100 font-bold">+</button>
                 </span>
               </div>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => { setShowAdd(false); setNewNom(""); }}
-                  className="h-11 px-4 rounded-xl border font-bold text-sm">Annuler</button>
-                <button disabled={busyAdd} className={`flex-1 h-11 rounded-xl bg-secondary-container font-bold text-primary text-sm ${busyAdd ? "opacity-70" : ""}`}>
-                  {busyAdd ? "…" : "Ajouter"}
-                </button>
-              </div>
+              <button disabled={busyAdd} className={`w-full h-12 rounded-xl bg-secondary-container font-bold text-primary text-sm ${busyAdd ? "opacity-70" : ""}`}>
+                {busyAdd ? "…" : "Ajouter cette matière"}
+              </button>
+              <button type="button" onClick={() => { setShowAdd(false); setNewNom(""); }}
+                className="w-full text-xs text-slate-500 underline">Annuler</button>
             </form>
           )}
-          <div className="flex gap-2">
-            <button onClick={() => goto(1)} className="h-12 px-5 rounded-xl border font-bold text-sm">← Retour</button>
-            <button onClick={() => goto(3)} className="flex-1 h-12 rounded-xl bg-primary-container text-white font-bold text-sm">
-              Continuer ({nb} matière{nb > 1 ? "s" : ""})
-            </button>
-          </div>
+          <button onClick={() => goto(3)} className="w-full h-12 rounded-xl bg-primary-container text-white font-bold text-sm">
+            Continuer ({nb} matière{nb > 1 ? "s" : ""})
+          </button>
+          <button onClick={() => goto(1)} className="w-full text-xs text-slate-500 underline">← Retour</button>
         </section>
       )}
 
@@ -362,14 +339,14 @@ export default function Assistant() {
           </div>
           <input type="range" min="10" max="20" step="1" value={dial} onChange={(e) => setDial(Number(e.target.value))} className="w-full" />
           <p className="text-xs text-slate-500">{b.pct}% de chances — {b.strat}</p>
-          <div className="flex gap-2 pt-1">
-            <button onClick={() => goto(1)} className="h-12 px-5 rounded-xl border font-bold text-sm">← Retour</button>
-            <button onClick={go} disabled={busyGo} className={`flex-1 h-12 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary flex items-center justify-center gap-2 ${busyGo ? "opacity-70" : ""}`}>
+          <div className="pt-1">
+            <button onClick={go} disabled={busyGo} className={`w-full h-12 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary flex items-center justify-center gap-2 ${busyGo ? "opacity-70" : ""}`}>
               {busyGo ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : (<>
                 <span>Calculer mon plan</span>
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </>)}
             </button>
+            <button onClick={() => goto(2)} className="w-full text-xs text-slate-500 underline">← Retour</button>
           </div>
         </section>
       )}

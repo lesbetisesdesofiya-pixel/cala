@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { stashFeuille, readStashedFeuille } from "../lib/feuille";
 import { sb } from "../lib/supabase";
 import {
-  fmtPlan, r1, moyennesParType, moyenneMatiere3Niveaux, genererFeuille, ciblePeriodeActuelle,
-  ciblesDePeriode, situationSuivi, regenRealiste, phraseReste, phraseRationale,
+  fmtPlan, moyennesParType, moyenneMatiere3Niveaux, genererFeuille, ciblePeriodeActuelle,
+  ciblesDePeriode, situationSuivi, regenRealiste, phraseReste,
   diffLabel, diffImpliquee, PLAFOND_CIBLE,
 } from "../lib/engine";
 import { track } from "../lib/analytics";
@@ -74,9 +74,6 @@ export default function Feuille() {
   const hasNotes = (db.notesRaw || []).length > 0;
   const ech = db.objectifs.echeance;
   const jRestants = ech ? Math.max(0, Math.ceil((new Date(ech) - new Date()) / 86400000)) : null;
-  const rythme = jRestants != null && jRestants > 0
-    ? r1((cible - db.user.moyenneActuelle) / Math.max(1, Math.ceil(jRestants / 7)))
-    : null;
 
   const decalages = mats
     .filter((m) => !m.sansNotes) // alerte seulement si de vraies notes existent
@@ -202,7 +199,7 @@ export default function Feuille() {
         </span>
         {jRestants != null && (
           <span className="inline-flex items-center gap-1 mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-[11px] font-bold">
-            J-{jRestants}{rythme != null && rythme > 0 ? ` • +${fmtPlan(rythme)} pt/semaine requis` : ""}
+            J-{jRestants} avant l'échéance
           </span>
         )}
         <div className="mt-2 flex items-center justify-center gap-2 text-xs font-bold flex-wrap">
@@ -220,13 +217,8 @@ export default function Feuille() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-xl">tune</span>
-            <h2 className="font-bold text-primary">Barème par matière</h2>
+            <h2 className="font-bold text-primary">Barème par matière ({mats.length})</h2>
           </div>
-          <span className="text-[11px] text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg font-semibold">{mats.length} matières auditées</span>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-2 bg-secondary-container/15 rounded-xl border border-secondary-container/30">
-          <span className="material-symbols-outlined text-base text-secondary shrink-0">edit_note</span>
-          <span className="text-xs font-semibold">Personnalise tes notes cibles avec les boutons + / −.</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-slate-500 font-semibold">Tes notes réelles font évoluer le plan :</span>
@@ -276,7 +268,6 @@ export default function Feuille() {
                   <div>
                     <h3 className="font-bold text-primary">{m.nom}</h3>
                     <p className="text-xs text-slate-500">Coeff {m.coef} • <span className="font-semibold text-secondary">{diffLabel(m.difficulte)}</span></p>
-                    <p className="text-[11px] text-slate-500 italic">{phraseRationale(m.difficulte)}</p>
                   </div>
                 </div>
                 <div className="text-right bg-slate-100 px-2.5 py-1 rounded-xl border">
@@ -284,7 +275,7 @@ export default function Feuille() {
                   <span className="font-bold text-primary">{visee == null ? "—" : fmtPlan(visee)}<span className="text-xs font-normal text-slate-500">/20</span></span>
                 </div>
               </div>
-              {s && (
+              {s && s.reel != null && (
                 <div className="mb-3 px-3 py-2 rounded-xl bg-slate-50 border text-xs space-y-1">
                   <p className="font-bold text-primary">
                     Plan : {fmtPlan(s.planT)} • Réel : {s.reel == null ? "—" : fmtPlan(s.reel)} • Écart : {s.ecart == null ? "—" : `${s.ecart > 0 ? "+" : ""}${fmtPlan(s.ecart)}`}
@@ -319,39 +310,17 @@ export default function Feuille() {
         })}
       </div>
 
-      <section className="rounded-2xl border border-secondary-container/40 bg-gradient-to-br from-white to-slate-100 p-4">
-        <div className="flex items-start gap-3">
-          <div className="w-11 h-11 rounded-xl bg-secondary-container flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-2xl fill">auto_awesome</span>
-          </div>
-          <div>
-            <h4 className="font-bold text-primary">Garde ta stratégie active tout le semestre</h4>
-            <p className="text-xs text-slate-500 mt-1">Enregistre tes notes cibles pour le suivi sur mesure et le recalcul automatique.</p>
-          </div>
-        </div>
-      </section>
-
-      <div className="h-64" />
+      <div className="h-40" />
       {/* CTA au-dessus du bottom nav (bottom-16 = hauteur h-16 du nav) */}
       <div className="fixed bottom-16 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t">
         <div className="max-w-lg mx-auto px-4 pt-3 pb-5 flex flex-col items-center">
           {isSub === false && !hasNotes ? (
-          <div className="w-full rounded-2xl border border-secondary-container/50 bg-gradient-to-br from-white to-slate-100 p-4 space-y-2">
-            <p className="font-extrabold text-primary">Ton plan est prêt. Ne perds pas le fil.</p>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Dès ta première note, ClassiNote comparera tes résultats à ton plan et calculera ce qu'il te reste à viser pour atteindre ton objectif de {fmtPlan(cible)}/20.
-            </p>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Active ton suivi maintenant pour commencer à suivre ta trajectoire dès ta première évaluation.
-            </p>
-            <button onClick={save} disabled={busySave} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
-              {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
-              <span className="material-symbols-outlined text-2xl">lock_open</span>
-              <span>Activer mon suivi</span>
-              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F</span>
-              </>)}
+          <div className="w-full rounded-2xl bg-primary-container text-white px-4 py-3 flex items-center gap-3">
+            <span className="material-symbols-outlined text-2xl text-secondary-container shrink-0">lock_open</span>
+            <p className="flex-1 text-sm font-bold leading-snug">Ton plan est prêt — active ton suivi</p>
+            <button onClick={save} disabled={busySave} className={`shrink-0 h-11 px-4 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-sm flex items-center gap-1.5 active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
+              {busySave ? <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span> : (<>Activer <span className="px-1.5 py-0.5 rounded-md bg-primary text-white text-[11px] font-bold">1000 F</span></>)}
             </button>
-            <Link to="/notes" className="block text-center text-xs text-slate-500 underline">Continuer sans sauvegarder</Link>
           </div>
           ) : (<>
           {isSub === false && (
@@ -372,25 +341,13 @@ export default function Feuille() {
             <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F/mois</span>
             </>) : (<>
             <span className="material-symbols-outlined text-2xl">save</span>
-            <span>Activer mon suivi</span>
+            <span>Enregistrer</span>
             </>)}
           </button>
-          {isSub === false ? (<>
-          <div className="flex items-center justify-center gap-3 mt-2 text-[11px] font-bold text-primary">
-            <span className="flex items-center gap-0.5"><span className="material-symbols-outlined text-xs text-emerald-600">check_circle</span>Suivi réel vs plan</span>
-            <span className="flex items-center gap-0.5"><span className="material-symbols-outlined text-xs text-emerald-600">check_circle</span>Recalcul auto</span>
-            <span className="flex items-center gap-0.5"><span className="material-symbols-outlined text-xs text-emerald-600">check_circle</span>Reste à viser</span>
-          </div>
-          <div className="flex items-center justify-center gap-2 mt-1.5 text-[11px] text-slate-500 font-medium">
-            <span>Soit ~33 F/jour, moins cher qu'un répétiteur</span><span>•</span>
-            <span className="font-bold flex items-center gap-0.5"><span className="material-symbols-outlined text-xs">security</span>Sans engagement</span>
-          </div>
-          <div className="flex items-center justify-center gap-1.5 mt-1.5">
-            {["Yas", "Moov"].map((o) => <span key={o} className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-primary border">{o}</span>)}
-          </div>
-          <Link to="/notes" className="mt-2 text-xs text-slate-500 underline">Continuer sans sauvegarder</Link>
-          </>          ) : (
-          <p className="mt-2 text-[11px] text-slate-500 font-medium">Inclus dans ton abonnement</p>
+          {isSub === false ? (
+            <p className="mt-1.5 text-center text-[11px] text-slate-500 font-medium">Sans engagement • Yas & Moov</p>
+          ) : (
+            <p className="mt-1.5 text-center text-[11px] text-slate-500 font-medium">Inclus dans ton abonnement</p>
           )}
           </>)}
         </div>

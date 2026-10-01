@@ -246,7 +246,8 @@ export default function Feuille() {
                 <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-2xl">{m.icon}</span>
                 </div>
-                <h3 className="font-bold text-primary">{m.nom}</h3>
+                <h3 className="font-bold text-primary flex-1 truncate">{m.nom}</h3>
+                {visee != null && <span className="text-sm font-extrabold text-secondary shrink-0">→ {fmtPlan(visee)}</span>}
               </div>
               {s && s.reel != null && (
                 <div className="mb-3 px-3 py-2 rounded-xl bg-slate-50 border text-xs space-y-1">
@@ -288,9 +289,9 @@ export default function Feuille() {
       <div className="fixed bottom-16 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t">
         <div className="max-w-lg mx-auto px-4 pt-3 pb-5 flex flex-col items-center">
           {isSub === false && !hasNotes ? (
-          <button onClick={save} disabled={busySave} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
+          <button onClick={save} disabled={busySave} className={`w-full min-h-[3.5rem] py-3 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-[15px] leading-snug text-center flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
-              <span>Je commence à suivre mes notes</span>
+              <span>Je veux atteindre mes objectifs</span>
               <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
             </>)}
           </button>
@@ -306,7 +307,7 @@ export default function Feuille() {
                   Ton plan n'est pas sauvegardé : sans abonnement, il sera perdu.
                 </p>
           )}
-          <button onClick={save} disabled={busySave} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
+          <button onClick={save} disabled={busySave} className={`w-full min-h-[3.5rem] py-3 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-[15px] leading-snug flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : isSub === false ? (<>
             <span>Je commence à suivre mes notes</span>
             <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>

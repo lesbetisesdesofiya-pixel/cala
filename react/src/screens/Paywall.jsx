@@ -85,13 +85,53 @@ export function Paywall() {
 
   return (
     <div className="space-y-4 fade">
-      <div className="rounded-2xl bg-gradient-to-br from-secondary-container to-secondary-fixed-dim p-5 text-on-secondary-fixed">
-        <span className="text-[11px] uppercase font-bold">Abonnement mensuel</span>
-        <div className="text-4xl font-extrabold">{prixAffiche} <span className="text-lg">{p.devise}{p.periode}</span></div>
-        <p className="text-xs font-semibold mt-1">
-          Paiement Mobile Money via MoneyFusion (Yas, Moov). Sans engagement.
-        </p>
+      <div className="rounded-[24px] bg-primary-container text-white p-6 text-center relative overflow-hidden">
+        <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-secondary-container opacity-20 blur-2xl" />
+        <span className="inline-flex items-center gap-1 text-[11px] uppercase font-bold text-secondary-container">
+          <span className="material-symbols-outlined text-sm fill">verified</span>Sans engagement
+        </span>
+        <div className="text-5xl font-extrabold mt-1">{prixAffiche} <span className="text-lg font-bold text-slate-300">{p.devise}{p.periode}</span></div>
+        <p className="text-xs text-slate-300 mt-1 font-medium">Paiement Mobile Money (Yas, Moov) via MoneyFusion.</p>
       </div>
+
+      <section className="bg-white rounded-2xl border p-4 shadow-card space-y-3">
+        <h2 className="font-bold text-primary text-center">Tout ce qui se débloque</h2>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            ["edit_note", "Notes illimitées"],
+            ["route", "Plan par matière"],
+            ["show_chart", "Suivi réel vs plan"],
+            ["refresh", "Recalcul auto"],
+            ["calculate", "Simulateur"],
+            ["assignment", "Devoirs"],
+            ["account_balance_wallet", "Budget"],
+            ["trending_up", "Évolution"],
+            ["menu_book", "Livres de ta classe"],
+          ].map(([ic, lb]) => (
+            <div key={lb} className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border">
+              <span className="w-8 h-8 rounded-lg bg-secondary-container/40 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-primary text-lg">{ic}</span>
+              </span>
+              <span className="text-xs font-bold text-primary leading-tight">{lb}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-2xl bg-secondary-fixed/40 border border-secondary-container/40 p-4 space-y-2.5">
+        <h2 className="font-bold text-primary text-center">Pourquoi payer ?</h2>
+        {[
+          ["lightbulb", "Tes notes deviennent un plan d'action, matière par matière. Fini le stress avant chaque épreuve."],
+          ["savings", "500 F/mois — 10 à 30 fois moins cher qu'un répétiteur, pour un suivi tous les jours."],
+          ["check_circle", "Sans engagement : le service s'arrête à la fin de la période payée, sans frais cachés."],
+        ].map(([ic, tx]) => (
+          <div key={ic} className="flex items-start gap-2.5">
+            <span className="material-symbols-outlined text-secondary fill shrink-0">{ic}</span>
+            <p className="text-xs font-semibold text-primary leading-relaxed">{tx}</p>
+          </div>
+        ))}
+      </section>
+
       <Link to="/premium" className="block text-center text-xs font-bold text-primary underline">Voir le détail de l'offre →</Link>
       <form onSubmit={submit} className="bg-white rounded-2xl border p-4 space-y-3">
         <div>

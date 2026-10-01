@@ -32,6 +32,26 @@ export default function Me() {
       toast("Paramètres enregistrés");
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusyParam(false); }
   };
+  const [stockage, setStockage] = useState(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!("caches" in window)) return;
+        const c = await caches.open("classinote-react-v3");
+        const keys = await c.keys();
+        setStockage(keys.filter((r) => r.url.includes("/livres/")).length);
+      } catch {}
+    })();
+  }, []);
+  const liberer = async () => {
+    try {
+      const c = await caches.open("classinote-react-v3");
+      const keys = await c.keys();
+      await Promise.all(keys.filter((r) => r.url.includes("/livres/")).map((r) => c.delete(r)));
+      setStockage(0);
+      toast("Espace livres libéré");
+    } catch (err) { toast("Erreur : " + err.message); }
+  };
   const chip = (label, active, onClick) => (
     <button key={label} onClick={onClick} disabled={busyParam}
       className={`px-3 h-9 rounded-xl text-xs font-bold border ${active ? "bg-primary-container text-white border-primary-container" : "bg-white text-primary"} ${busyParam ? "opacity-60" : ""}`}>
@@ -41,8 +61,9 @@ export default function Me() {
   const periodes = u.regime === "Semestre" ? ["Semestre 1", "Semestre 2"] : ["Trimestre 1", "Trimestre 2", "Trimestre 3"];
 
   const rows = [
-    { to: "/onboarding", icon: "school", t: "Classe & Série", d: `${u.serie} • ${u.lycee}` },
+    { to: "/assistant", icon: "school", t: "Classe & Série", d: `${u.serie} • ${u.lycee}` },
     { to: "/matiere", icon: "tune", t: `Mes Matières (${db.matieres.length})`, d: "Gérer les matières et coefficients" },
+    { to: "/affiliation", icon: "group_add", t: "Parrainage", d: "Gagne 250 F par filleul" },
     ...(!u.hasPin ? [{ to: "/pin", icon: "lock", t: "Code PIN", d: "Sécuriser l'entrée de l'app" }] : []),
     { icon: "language", t: "Langue", d: pf.langue },
     { icon: "payments", t: "Devise", d: pf.devise },
@@ -64,16 +85,12 @@ export default function Me() {
         <div className={`mt-3 rounded-2xl p-3 border text-sm font-bold ${sub.startsWith("Actif") ? "bg-emerald-50 border-emerald-300 text-emerald-800" : "bg-amber-50 border-amber-300 text-amber-800"}`}>
           Abonnement : {sub} — <Link to="/paywall" className="underline">Gérer</Link>
         </div>
-        <Link to="/premium" className="mt-3 flex items-center justify-between border-t pt-3">
-            <span className="text-sm font-bold">Pass Premium — 1000 FCFA/mois</span>
-          <span className="px-3 py-2 rounded-xl bg-secondary-container text-xs font-bold">Passer Premium →</span>
-        </Link>
       </section>
 
       <section className="bg-white rounded-2xl p-4 border shadow-card space-y-3">
         <h2 className="font-bold text-primary">Période scolaire</h2>
         <div>
-          <p className="text-[11px] font-bold text-slate-500 mb-1.5">Régime de ton école</p>
+          <p className="text-[11px] font-bold text-slate-500 mb-1.5">Ton école fonctionne en</p>
           <div className="flex gap-2">
             {["Trimestre", "Semestre"].map((r) => chip(r, u.regime === r, () => setParam(
               { regime: r, periode: r === "Semestre" ? "Semestre 1" : "Trimestre 1" },
@@ -125,11 +142,19 @@ export default function Me() {
         })}
       </section>
 
+      <section className="bg-white rounded-2xl p-4 border shadow-card flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-bold text-primary">Livres hors ligne</p>
+          <p className="text-xs text-slate-500">{stockage == null ? "Calcul…" : stockage === 0 ? "Aucune page conservée" : `${stockage} page${stockage > 1 ? "s" : ""} conservée${stockage > 1 ? "s" : ""}`}</p>
+        </div>
+        <button onClick={liberer} className="px-4 h-10 rounded-xl border text-xs font-bold text-primary shrink-0">Libérer</button>
+      </section>
+
       <section className="rounded-2xl bg-primary-container text-white p-5">
         <p className="text-xs text-secondary-container font-bold">PASS PREMIUM ÉTUDIANT — 1000 F/mois, 500 F le 1er mois avec un code promo</p>
         <h4 className="font-bold">Multipliez vos chances de réussite</h4>
-        <Link to="/premium" className="mt-3 block text-center h-12 leading-[48px] rounded-xl bg-secondary-container text-[#271900] font-bold">
-          S'abonner maintenant
+        <Link to="/paywall" className="mt-3 block text-center h-12 leading-[48px] rounded-xl bg-secondary-container text-[#271900] font-bold">
+          Gérer mon abonnement
         </Link>
       </section>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { sb, edgeFn } from "../lib/supabase";
 import { savePendingFeuille } from "../lib/feuille";
@@ -81,8 +81,8 @@ export function Paywall() {
       }
     } catch (e) { toast("Abonnement actif (plan non sauvé : " + e.message + ")"); return; }
     const u = (await reload()) || fresh;
-          if (!u.user.hasPin) nav("/pin-choice");
-    else { unlock(); nav("/notes"); }
+    unlock();
+    nav("/notes");
   };
 
   const check = async () => {
@@ -133,6 +133,7 @@ export function Paywall() {
             : "Paiement Mobile Money via MoneyFusion (Yas, Moov). 1er mois à 500 F avec un code promo."}
         </p>
       </div>
+      <Link to="/premium" className="block text-center text-xs font-bold text-primary underline">Voir le détail de l'offre →</Link>
       <form onSubmit={submit} className="bg-white rounded-2xl border p-4 space-y-3">
         <div>
           <label className="text-sm font-bold">Ton nom (reçu de paiement)</label>
@@ -165,15 +166,17 @@ export function Paywall() {
             {promoMsg && <p className={`text-xs font-bold ${promoMsg.ok ? "text-emerald-700" : "text-rose-600"}`}>{promoMsg.texte}</p>}
           </div>
         )}
-        <button disabled={busy === "pay"} className={`w-full h-12 rounded-xl bg-primary-container text-white font-semibold flex items-center justify-center gap-2 ${busy === "pay" ? "opacity-70" : ""}`}>
+        <button disabled={busy === "pay"} className={`w-full h-12 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container text-primary font-extrabold flex items-center justify-center gap-2 ${busy === "pay" ? "opacity-70" : ""}`}>
           {busy === "pay" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : `Payer ${prixAffiche} FCFA`}
         </button>
         <button type="button" onClick={check} disabled={busy === "check"} className={`w-full h-11 rounded-xl bg-secondary-container font-bold text-primary text-sm flex items-center justify-center gap-2 ${busy === "check" ? "opacity-70" : ""}`}>
           {busy === "check" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "J'ai payé — vérifier mon abonnement"}
         </button>
-        <button type="button" onClick={testSub} disabled={busy === "test"} className={`w-full h-11 rounded-xl border-2 border-dashed border-outline-variant font-bold text-on-surface-variant text-sm flex items-center justify-center gap-2 ${busy === "test" ? "opacity-70" : ""}`}>
-          {busy === "test" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "Mode test : activer 30 jours gratuits"}
-        </button>
+        {import.meta.env.DEV && (
+          <button type="button" onClick={testSub} disabled={busy === "test"} className={`w-full h-11 rounded-xl border-2 border-dashed border-outline-variant font-bold text-on-surface-variant text-sm flex items-center justify-center gap-2 ${busy === "test" ? "opacity-70" : ""}`}>
+            {busy === "test" ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : "Mode test : activer 30 jours gratuits"}
+          </button>
+        )}
       </form>
       <SignOut />    </div>
   );
@@ -220,8 +223,8 @@ export function Callback() {
         if (go) {
           const u = await reload().catch(() => null);
           if (!u) { nav("/notes"); return; }
-    if (!u.user.hasPin) nav("/pin-choice");
-          else { unlock(); nav("/notes"); }
+          unlock();
+          nav("/notes");
         }
       } else toast("Paiement " + out.status + " — finalise sur la page MoneyFusion puis reviens.");
     } catch (err) { toast("Erreur : " + err.message); }

@@ -128,7 +128,7 @@ export default function Feuille() {
     });
     setFeuille(t);
     toast(r.tientToujours
-      ? "Ton plan tient toujours — brouillon réaligné"
+      ? "Ton plan tient toujours — recalculé"
       : "Nouveau plan réaliste calculé — Enregistre pour le figer");
   };
 

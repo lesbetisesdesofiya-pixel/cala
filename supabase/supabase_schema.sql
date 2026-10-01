@@ -373,6 +373,41 @@ $$ update promo_codes set used_count = used_count + 1 where id = p_code $$;
 -- Exemple (à adapter) : insert into promo_codes(code, montant, max_uses, expires_at)
 -- values ('AFFICHE2026', 500, 500, now() + interval '90 days');
 
+-- ============ LIVRES (bibliothèque par classe, images en git) ============
+-- Les images vivent dans react/public/livres/{dossier}/ (couverture + p01.jpg...).
+-- Une seule table suffit : les pages se déduisent de dossier + nb_pages.
+-- Convention : react/public/livres/<classe>/<livre>/cover.jpg + p01.jpg...pNN.jpg
+create table if not exists livres (
+  id uuid primary key default gen_random_uuid(),
+  classe text not null,
+  matiere text not null,
+  titre text not null,
+  dossier text unique not null,
+  couverture text,
+  nb_pages int not null default 0,
+  ordre int not null default 0,
+  created_at timestamptz default now()
+);
+-- Flag admin (gestion abonnements + livres via /admin). Posé à la main :
+-- update profiles set is_admin = true where phone = '+228...';
+alter table profiles add column if not exists is_admin boolean not null default false;
+alter table livres enable row level security;
+drop policy if exists "livres_read_sub" on livres;
+create policy "livres_read_sub" on livres for select using (has_active_subscription(auth.uid()));
+drop policy if exists "livres_admin_all" on livres;
+create policy "livres_admin_all" on livres for all using (
+  exists (select 1 from profiles where id = auth.uid() and is_admin = true)
+) with check (
+  exists (select 1 from profiles where id = auth.uid() and is_admin = true)
+);
+-- Abonnements : lecture + écriture pour l'admin (prolonger +30j / résilier).
+drop policy if exists "subscriptions_admin_all" on subscriptions;
+create policy "subscriptions_admin_all" on subscriptions for all using (
+  exists (select 1 from profiles where id = auth.uid() and is_admin = true)
+) with check (
+  exists (select 1 from profiles where id = auth.uid() and is_admin = true)
+);
+
 -- ============ AFFILIATION ============
 -- Un affilié = un compte auth + code promo à 6 chiffres (montant 500 F).
 -- Commission : commission_pct % du 1er paiement du filleul, une seule fois

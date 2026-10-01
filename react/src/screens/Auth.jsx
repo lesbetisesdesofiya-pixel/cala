@@ -34,7 +34,7 @@ export function Login() {
       const fresh = await reload(uid);
       if (!fresh) return;
       track("login", { source: "password" });
-      if (fresh.user.onboardingTermine === false) { nav("/onboarding"); return; }
+      if (fresh.user.onboardingTermine === false) { nav("/assistant"); return; }
       let sub = false;
       try {
         const { data } = await sb.rpc("has_active_subscription", { p_user: uid });
@@ -97,7 +97,6 @@ export function Login() {
 export function Register() {
   const { reload, unlock, toast } = useApp();
   const nav = useNavigate();
-  const [step, setStep] = useState(1);
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [indic, setIndic] = useState("+228");
@@ -138,7 +137,7 @@ export function Register() {
       track("signup_completed", { indicatif: indic });
       unlock();
       toast("Compte créé");
-      nav("/onboarding");
+      nav("/assistant");
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusyReg(false); }
   };
 
@@ -165,7 +164,6 @@ export function Register() {
           </span>
           <span className="text-xs font-bold text-primary">ClassiNote</span>
         </span>
-        <span className="text-[11px] font-bold px-2 py-1 rounded-md bg-surface-container-low">1 / 2</span>
       </div>
       <div className="mt-4 space-y-2">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-[11px] font-bold uppercase">
@@ -175,58 +173,40 @@ export function Register() {
         <p className="text-sm text-on-surface-variant">Rejoins des milliers d'élèves et réussis ton année scolaire en toute sérénité.</p>
       </div>
       <form onSubmit={submit} className="mt-4 space-y-4">
-        <p className="text-[11px] font-bold text-secondary">Étape {step} sur 2</p>
-        {step === 1 ? (
-          <>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-on-surface-variant">Numéro de téléphone</label>
-              <div className="flex gap-2">
-                <div className="relative w-28 shrink-0">
-                  <select value={indic} onChange={(e) => setIndic(e.target.value)} className="w-full h-12 pl-2.5 pr-7 rounded-xl bg-surface-container-low border border-outline-variant/50 text-sm font-semibold appearance-none">
-                    {INDICS.map(([c, f]) => <option key={c} value={c}>{f} {c}</option>)}
-                  </select>
-                  <span className="material-symbols-outlined text-[18px] absolute right-2 top-3 pointer-events-none">expand_more</span>
-                </div>
-                <div className="relative flex-1 flex items-center">
-                  <span className="absolute left-3.5 material-symbols-outlined text-[20px] text-on-surface-variant/70">call</span>
-                  <input required inputMode="tel" placeholder="90 00 00 00" value={phone} onChange={(e) => setPhone(e.target.value)}
-                    className="w-full h-12 pl-11 pr-4 rounded-xl border border-outline-variant/50 text-sm outline-none" />
-                </div>
-              </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-on-surface-variant">Numéro de téléphone</label>
+          <div className="flex gap-2">
+            <div className="relative w-28 shrink-0">
+              <select value={indic} onChange={(e) => setIndic(e.target.value)} className="w-full h-12 pl-2.5 pr-7 rounded-xl bg-surface-container-low border border-outline-variant/50 text-sm font-semibold appearance-none">
+                {INDICS.map(([c, f]) => <option key={c} value={c}>{f} {c}</option>)}
+              </select>
+              <span className="material-symbols-outlined text-[18px] absolute right-2 top-3 pointer-events-none">expand_more</span>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-on-surface-variant">Mot de passe (8 caractères minimum)</label>
-              <div className="relative flex items-center">
-                <span className="absolute left-3.5 material-symbols-outlined text-[20px] text-on-surface-variant/70">lock</span>
-                <input required type="password" minLength={8} placeholder="••••" value={password} onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl border border-outline-variant/50 text-sm outline-none" />
-              </div>
+            <div className="relative flex-1 flex items-center">
+              <span className="absolute left-3.5 material-symbols-outlined text-[20px] text-on-surface-variant/70">call</span>
+              <input required inputMode="tel" placeholder="90 00 00 00" value={phone} onChange={(e) => setPhone(e.target.value)}
+                className="w-full h-12 pl-11 pr-4 rounded-xl border border-outline-variant/50 text-sm outline-none" />
             </div>
-            <button type="button" onClick={() => {
-              if (phone.replace(/\D/g, "").length < 8) return toast("Numéro incomplet");
-              if (!password || password.length < 8) return toast("Mot de passe : 8 caractères minimum");
-              setStep(2);
-            }} className="w-full h-12 rounded-xl bg-secondary-container font-bold text-primary flex items-center justify-center gap-2 shadow">
-              Continuer<span className="material-symbols-outlined">arrow_forward</span>
-            </button>
-          </>
-        ) : (
-          <>
-            {field("Nom", "Ex: Diallo", "badge", nom, setNom, "Requis")}
-            {field("Prénom", "Ex: Aminata", "person", prenom, setPrenom, "Requis")}
-            {field("Nom de l'École / Établissement", "Ex: Lycée Classique d'Abidjan", "account_balance", ecole, setEcole, "Requis")}
-            <label className="flex items-start gap-3 cursor-pointer select-none pt-2">
-              <input required type="checkbox" className="mt-1 w-5 h-5 rounded-md accent-[#0f2942]" />
-              <span className="text-xs text-on-surface-variant">J'accepte les <Link to="/legal#cgu" className="font-semibold text-primary underline">Conditions d'utilisation</Link> et la <Link to="/legal#confidentialite" className="font-semibold text-primary underline">Politique de confidentialité</Link> de ClassiNote.</span>
-            </label>
-            <div className="flex gap-2">
-              <button type="button" onClick={() => setStep(1)} className="h-12 px-4 rounded-xl border font-bold text-sm">Retour</button>
-              <button disabled={busyReg} className={`flex-1 h-12 rounded-xl bg-secondary-container font-bold text-primary flex items-center justify-center gap-2 shadow ${busyReg ? "opacity-70" : ""}`}>
-                {busyReg ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : <>Créer mon compte<span className="material-symbols-outlined">arrow_forward</span></>}
-              </button>
-            </div>
-          </>
-        )}
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-on-surface-variant">Mot de passe (8 caractères minimum)</label>
+          <div className="relative flex items-center">
+            <span className="absolute left-3.5 material-symbols-outlined text-[20px] text-on-surface-variant/70">lock</span>
+            <input required type="password" minLength={8} placeholder="••••" value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full h-12 pl-11 pr-4 rounded-xl border border-outline-variant/50 text-sm outline-none" />
+          </div>
+        </div>
+        {field("Nom", "Ex: Diallo", "badge", nom, setNom, "Requis")}
+        {field("Prénom", "Ex: Aminata", "person", prenom, setPrenom, "Requis")}
+        {field("Nom de l'École / Établissement", "Ex: Lycée Classique d'Abidjan", "account_balance", ecole, setEcole, "Requis")}
+        <label className="flex items-start gap-3 cursor-pointer select-none pt-2">
+          <input required type="checkbox" className="mt-1 w-5 h-5 rounded-md accent-[#0f2942]" />
+          <span className="text-xs text-on-surface-variant">J'accepte les <Link to="/legal#cgu" className="font-semibold text-primary underline">Conditions d'utilisation</Link> et la <Link to="/legal#confidentialite" className="font-semibold text-primary underline">Politique de confidentialité</Link> de ClassiNote.</span>
+        </label>
+        <button disabled={busyReg} className={`w-full h-12 rounded-xl bg-secondary-container font-bold text-primary flex items-center justify-center gap-2 shadow ${busyReg ? "opacity-70" : ""}`}>
+          {busyReg ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : <>Créer mon compte<span className="material-symbols-outlined">arrow_forward</span></>}
+        </button>
       </form>
       <p className="text-center text-sm text-on-surface-variant mt-6">Tu as déjà un compte ? <Link to="/login" className="font-semibold text-primary underline ml-1">Se connecter</Link></p>
     </div>

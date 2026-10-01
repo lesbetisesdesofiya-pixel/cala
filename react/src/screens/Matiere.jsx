@@ -58,7 +58,7 @@ export default function Matiere() {
         if (!r.queued) { await reload(); }
         toast("Matière ajoutée");
       }
-      nav("/onboarding");
+      nav("/assistant");
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusy(false); }
   };
 
@@ -115,7 +115,7 @@ export default function Matiere() {
             </span>
           </div>
       <div className="grid grid-cols-2 gap-3 pt-3 border-t">
-        <p className="col-span-2 text-[11px] text-slate-500">Sans note sur un levier, la moyenne est provisoire.</p>
+        <p className="col-span-2 text-[11px] text-slate-500">Tant qu'il manque des notes, la moyenne reste indicative.</p>
       </div>
         </div>
         <button disabled={busy} className={`w-full h-12 rounded-xl bg-secondary-container font-bold text-primary flex items-center justify-center gap-2 ${busy ? "opacity-70" : ""}`}>

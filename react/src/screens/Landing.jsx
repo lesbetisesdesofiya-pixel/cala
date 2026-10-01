@@ -357,7 +357,7 @@ export default function Landing() {
       </section>
 
       <footer className="ld-foot ld-wrap">
-        <div className="ld-links"><Link to="/register">L'app</Link><Link to="/legal">Mentions légales</Link><a href="mailto:hello@sofiya.cc">Contact</a></div>
+        <div className="ld-links"><Link to="/register">L'app</Link><Link to="/affiliation">Parrainage</Link><Link to="/legal">Mentions légales</Link><a href="mailto:hello@sofiya.cc">Contact</a></div>
         <p>© ClassiNote — ANANI Kokou Mensah, Lomé, Togo. Fait avec rigueur pour les élèves qui visent haut.</p>
       </footer>
     </div>

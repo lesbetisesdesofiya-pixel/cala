@@ -47,9 +47,7 @@ export function TopBar() {
           <span className="text-xs text-slate-500">{u.lycee}</span>
         </span>
       </Link>
-      <Link to="/me" className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 hover:bg-slate-100">
-        <span className="material-symbols-outlined">notifications</span>
-      </Link>
+      <span className="w-10" />
     </div>
   );
 }
@@ -62,7 +60,7 @@ export function TopBack({ titre, sous = "" }) {
   // feuille de route -> étape d'avant (objectif), connecté -> le dashboard,
   // déconnecté -> la landing, pendant l'installation -> l'étape précédente.
   const goBack = () => {
-    if (loc.pathname === "/feuille-route") return nav("/objectif");
+    if (loc.pathname === "/feuille-route") return nav("/assistant");
     if (!uid || !db) return nav("/");
     if (db.user.onboardingTermine === false) return window.history.back();
     return nav("/notes");
@@ -83,18 +81,27 @@ export function TopBack({ titre, sous = "" }) {
 
 const TABS = [
   ["/notes", "school", "Notes"],
-  ["/objectifs", "calculate", "Objectifs"],
   ["/devoirs", "assignment", "Devoirs"],
+  ["/feuille-route", "route", "Plan", true], // action centrale surélevée
+  ["/livres", "menu_book", "Livres"],
   ["/budget", "account_balance_wallet", "Budget"],
-  ["/evolution", "show_chart", "Évolution"],
   ["/me", "person", "Profil"],
 ];
 
 export function BottomNav() {
   return (
-    <div className="bg-white border-t flex justify-around items-center h-16 px-2 max-w-lg mx-auto">
-      {TABS.map(([to, ic, lb]) => (
-        <NavLink key={to} to={to} className={({ isActive }) => `navbtn${isActive ? " active" : ""}`}>
+    <div className="bg-white border-t flex justify-around items-stretch h-16 px-2 max-w-lg mx-auto">
+      {TABS.map(([to, ic, lb, fab]) => fab ? (
+        <NavLink key={to} to={to} className="relative -top-5 flex flex-col items-center shrink-0">
+          {({ isActive }) => (<>
+            <span className={`w-14 h-14 rounded-full bg-secondary-container text-primary flex items-center justify-center shadow-xl border-4 ${isActive ? "border-primary-container" : "border-white"}`}>
+              <span className="material-symbols-outlined text-2xl fill">{ic}</span>
+            </span>
+            <span className="text-[11px] font-bold text-primary -mt-0.5">{lb}</span>
+          </>)}
+        </NavLink>
+      ) : (
+        <NavLink key={to} to={to} end={to === "/notes"} className={({ isActive }) => `navbtn${isActive ? " active" : ""}`}>
           <span className="material-symbols-outlined">{ic}</span>
           {lb}
         </NavLink>

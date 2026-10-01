@@ -48,7 +48,7 @@ export default function AddNote() {
       if (!r.queued) { await recalcServer(); await reload(); }
       // Jamais la valeur de la note en analytics (donnée scolaire sensible).
       track("note_added", { type, trimestre: row.trimestre });
-      toast(`Note ${fmtNote(val)} ajoutée en ${m.nom} — pense à régénérer ta feuille`);
+      toast(`Note ${fmtNote(val)} ajoutée en ${m.nom} — pense à recalculer ton plan`);
       nav("/notes");
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusy(false); }
   };
@@ -73,7 +73,7 @@ export default function AddNote() {
               </button>
             ))}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Interro et DS comptent ×0.25, composition ×0.5. Sans note sur un levier, la moyenne est provisoire.</p>
+          <p className="text-[11px] text-slate-500 mt-1">Interros et devoirs comptent ×0,25, compos ×0,5. Tant qu'il manque des notes, la moyenne reste indicative.</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border text-center">
           <span className="text-[11px] uppercase font-bold text-slate-500">Note sur 20</span>

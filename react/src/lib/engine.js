@@ -6,7 +6,7 @@ export const fmtN = (n) => Number(n).toLocaleString("fr-FR").replace(/ /g, " "
 
 export const TYPES_EVAL = [
   { id: "IE", label: "Interrogation", court: "interro", poids: 0.25 },
-  { id: "DS", label: "Devoir Surveillé", court: "DS", poids: 0.25 },
+  { id: "DS", label: "Devoir Surveillé", court: "devoir", poids: 0.25 },
   { id: "COMPO", label: "Composition", court: "compo", poids: 0.5 },
 ];
 export const typeLabel = (t) => (TYPES_EVAL.find((x) => x.id === t) || { label: t }).label;

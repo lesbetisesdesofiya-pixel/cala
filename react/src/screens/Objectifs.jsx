@@ -312,7 +312,7 @@ export default function Objectifs() {
       </section>
 
       <section className="bg-white rounded-2xl p-4 border shadow-card">
-        <p className="text-sm font-bold text-primary">Faisabilité : {o.faisabilite}% — {o.faisabiliteLabel}</p>
+        <p className="text-sm font-bold text-primary">Tes chances : {o.faisabilite}% — {o.faisabiliteLabel}</p>
         <div className="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
           <div className="bg-secondary-container h-full rounded-full" style={{ width: `${o.faisabilite}%` }} />
         </div>

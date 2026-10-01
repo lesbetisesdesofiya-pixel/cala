@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { fmtNote, fmtPlan, genererFeuille, ciblesDePeriode, situationSuivi, phraseReste } from "../lib/engine";
@@ -33,7 +34,7 @@ function GpaRing({ moyenne }) {
   );
 }
 
-const TYPE_BADGE = { IE: "IE", DS: "DS", COMPO: "Compo" };
+const TYPE_BADGE = { IE: "Interro", DS: "Devoir", COMPO: "Compo" };
 
 export default function Notes() {
   const { db } = useApp();
@@ -50,6 +51,9 @@ export default function Notes() {
     .filter(([, s]) => s.reel != null && s.ecart != null && s.ecart < 0)
     .sort((a, b) => a[1].ecart - b[1].ecart)[0];
   const pireNom = pire ? db.matieres.find((m) => m.id === pire[0])?.nom : null;
+  const [pinOk, setPinOk] = useState(() => {
+    try { return !!localStorage.getItem("kp_pin_ok"); } catch { return true; }
+  });
 
   return (
     <div className="space-y-4 fade">
@@ -62,6 +66,37 @@ export default function Notes() {
       </section>
 
       <GpaRing moyenne={u.moyenneActuelle} />
+
+      {!db.user.hasPin && !pinOk && (
+        <section className="rounded-[20px] bg-primary-container text-white p-4 flex items-center gap-3">
+          <span className="material-symbols-outlined text-secondary-container text-2xl shrink-0">shield_lock</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold">Protège ton app avec un code PIN ?</p>
+            <p className="text-[11px] text-slate-300">Optionnel — fais-le quand tu veux.</p>
+          </div>
+          <Link to="/pin" className="px-4 h-10 rounded-xl bg-secondary-container text-primary text-xs font-bold flex items-center shrink-0">OK</Link>
+          <button onClick={() => { try { localStorage.setItem("kp_pin_ok", "1"); } catch {} setPinOk(true); }} className="text-slate-300 text-[11px] underline shrink-0">Plus tard</button>
+        </section>
+      )}
+
+      {(db.notesRaw || []).length === 0 && (
+        <section className="rounded-[20px] bg-white border p-4 shadow-card space-y-2">
+          <h2 className="font-bold text-primary">Tes 3 premiers pas</h2>
+          {[
+            ["add", "Ajoute ta première note", "/add-note"],
+            ["route", "Vois ton plan", "/feuille-route"],
+            ["lock_open", "Active ton suivi", "/paywall"],
+          ].map(([ic, lb, to]) => (
+            <Link key={to} to={to} className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border">
+              <span className="w-8 h-8 rounded-lg bg-secondary-container/40 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-primary text-lg">{ic}</span>
+              </span>
+              <span className="text-sm font-bold text-primary">{lb}</span>
+              <span className="material-symbols-outlined text-slate-300 ml-auto">chevron_right</span>
+            </Link>
+          ))}
+        </section>
+      )}
 
       <section className="rounded-[20px] bg-white border p-4 shadow-card">
         <div className="flex items-center justify-between">
@@ -109,6 +144,27 @@ export default function Notes() {
           </div>
         </section>
       )}
+
+      <div className="grid grid-cols-2 gap-2.5">
+        <Link to="/objectifs" className="rounded-2xl bg-white border p-3.5 shadow-card flex items-center gap-3">
+          <span className="w-10 h-10 rounded-xl bg-secondary-container/30 flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-primary">calculate</span>
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-primary">Simulateur</span>
+            <span className="text-[11px] text-slate-500">Et si j'ai… ?</span>
+          </span>
+        </Link>
+        <Link to="/livres" className="rounded-2xl bg-white border p-3.5 shadow-card flex items-center gap-3">
+          <span className="w-10 h-10 rounded-xl bg-secondary-container/30 flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-primary">menu_book</span>
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-primary">Livres</span>
+            <span className="text-[11px] text-slate-500">Par matière</span>
+          </span>
+        </Link>
+      </div>
 
       <section className="space-y-2.5">
         <div className="flex items-center justify-between px-1">

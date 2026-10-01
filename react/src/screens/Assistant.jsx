@@ -1,28 +1,39 @@
-import { useEffect, useRef, useState } from "react";import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../lib/store";
-import { diffLabel } from "../lib/engine";
-import { sb } from "../lib/supabase";
-import { track } from "../lib/analytics";
+import { diffLabel, fmtPlan, genererFeuille, ciblePeriodeActuelle } from "../lib/engine";
+import { stashFeuille } from "../lib/feuille";
 import { matieresDe } from "../lib/referentiel";
+import { track } from "../lib/analytics";
 
-export default function Onboarding() {
-  const { db, persistOp, reload, recalcServer, toast } = useApp();
+function bandeMention(db, v) {
+  const top3 = [...db.matieres].sort((a, b) => b.coef - a.coef).slice(0, 3).map((m) => `${m.nom} coeff ${m.coef}`).join(", ");
+  if (v < 12) return { label: "Mention Passable / Admis", pct: 96, tag: "Hautement Accessible", strat: "Une régularité minimale dans les matières de base suffira à consolider ce palier." };
+  if (v < 14) return { label: "Mention Assez Bien visée", pct: 92, tag: "Facilement Atteignable", strat: "Un travail régulier sur les exercices hebdomadaires garantira cette mention." };
+  if (v < 16) return { label: "Mention Bien assurée", pct: 88, tag: "Très Réalisable", strat: `Accessible avec une stratégie ciblée sur les gros coefficients (${top3}).` };
+  if (v < 18) return { label: "Mention Très Bien à portée", pct: 76, tag: "Ambitieux et Stimulant", strat: "Excellence demandée : sécurise au moins 15/20 dans les matières scientifiques." };
+  return { label: "Félicitations du Jury", pct: 64, tag: "Défi d'Élite", strat: "Palier d'exception : vise l'excellence sur l'ensemble des matières." };
+}
+
+// Assistant unique : classe + matières (auto) + moyenne visée, en un seul écran.
+// Remplace Onboarding + Objectif : une seule question qui compte (la cible),
+// tout le reste en valeurs sûres (régime/portée modifiables dans le profil).
+export default function Assistant() {
+  const { db, persistOp, patchDb, reload, toast } = useApp();
   const nav = useNavigate();
   const [cycle, setCycle] = useState(db.onboarding.cycleActif);
   const [classe, setClasse] = useState(db.onboarding.classeActive);
   const [confirmDel, setConfirmDel] = useState(null);
   const [busyDel, setBusyDel] = useState(null);
-  const [busyTerm, setBusyTerm] = useState(false);
+  const [dial, setDial] = useState(() => Math.max(15, Math.round(db.user.moyenneActuelle)));
+  const [busyGo, setBusyGo] = useState(false);
   const runningRef = useRef(false);
+  const b = bandeMention(db, dial);
 
   const classes = db.onboarding.classesByCycle[cycle] || [];
   const nb = db.onboarding.options.filter((o) => o.checked).length;
 
-  // Référentiel officiel : chargement AUTOMATIQUE des matières manquantes
-  // à chaque choix de classe (600 ms de stabilisation : si l'élève hésite
-  // entre deux classes, seule la dernière est chargée). Idempotent par nom :
-  // on ne réinsère jamais une matière déjà présente, et une matière supprimée
-  // à la main n'est pas rechargée tant que la classe ne change pas.
+  // Matières officielles : chargement automatique au choix de la classe.
   const chargerAuto = async (cible) => {
     if (!cible || runningRef.current) return;
     const ref = matieresDe(cible) || [];
@@ -100,54 +111,64 @@ export default function Onboarding() {
         if (d.notesToutes) d.notesToutes = d.notesToutes.filter((n) => n.matiere_id !== opt.id);
       });
       setConfirmDel(null);
-      if (!r.queued) { await recalcServer(); await reload(); }
+      if (!r.queued) { await reload(); }
       toast(`${opt.nom} supprimée`);
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusyDel(null); }
   };
 
-  const terminer = async () => {
+  const go = async () => {
+    if (busyGo) return;
     if (!db.onboarding.options.length) return toast("Ajoute au moins 1 matière pour continuer");
-    if (busyTerm) return;
-    setBusyTerm(true);
+    setBusyGo(true);
     try {
-      const r = await persistOp(
+      // 1. Classe + fin d'installation.
+      const r1 = await persistOp(
         { table: "profiles", method: "update", payload: { classe, serie: classe, onboarding_termine: true }, match: { id: db._uid } },
         (d) => { d.user.classe = classe; d.user.serie = classe; d.user.onboardingTermine = true; }
       );
-      if (!r.queued) await reload();
-      toast("Année personnalisée");
+      if (!r1.queued) await reload();
+      // 2. Objectif : le plan se calcule TOUJOURS (local si besoin).
+      const apply = (d) => { d.user.moyenneCible = dial; d.objectifs.cible = dial; d.objectifs.echeance = null; };
+      try {
+        const r2 = await persistOp({
+          table: "objectifs", method: "insert",
+          payload: { user_id: db._uid, actuel: db.user.moyenneActuelle, cible: dial, faisabilite: b.pct, echeance: null },
+        }, apply);
+        if (!r2.queued) await reload();
+        toast("Objectif enregistré");
+      } catch {
+        patchDb(apply);
+        toast("Plan calculé (sauvegarde après abonnement)");
+      }
       track("onboarding_completed", { classe, nb_matieres: db.onboarding.options.length });
-      nav("/objectif");
-    } catch (err) { toast("Erreur : " + err.message); } finally { setBusyTerm(false); }
+      // 3. Brouillon frais stashe + en route.
+      const porteeGo = db.user.objectifPortee === "trimestre" ? "trimestre" : "annuel";
+      try {
+        const eff = porteeGo === "annuel" ? ciblePeriodeActuelle(db, dial).cibleEffective : dial;
+        const g = genererFeuille(db, eff);
+        const draft = {};
+        Object.keys(g.targets).forEach((id) => {
+          const m = db.matieres.find((x) => x.id === id);
+          draft[id] = { ...g.targets[id], base: m && !m.sansNotes ? m.moyenne : null };
+        });
+        stashFeuille(draft, dial, null, { uid: db._uid, periode: db.user.periode, portee: porteeGo });
+      } catch {}
+      track("objectif_set", { cible: dial, portee: porteeGo, regime: db.user.regime });
+      nav("/feuille-route");
+    } catch (err) { toast("Erreur : " + err.message); } finally { setBusyGo(false); }
   };
 
   return (
     <div className="space-y-6 fade">
-      <div className="pb-3 pt-1 px-4 bg-surface-container-lowest shadow-sm -mx-4">
-        <div className="flex justify-between items-center mb-1.5">
-          <span className="text-xs text-on-surface-variant font-medium">Profil scolaire & matières</span>
-          <span className="text-xs text-primary font-bold">60%</span>
-        </div>
-        <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
-          <div className="h-full bg-secondary-container rounded-full" style={{ width: "60%" }} />
-        </div>
-      </div>
-
       <section className="space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-[11px] font-semibold">
-          <span className="material-symbols-outlined text-sm fill">auto_awesome</span>Personnalisation automatique
-        </div>
-        <h1 className="text-[26px] leading-[34px] font-bold text-primary tracking-tight">Personnalise ton année</h1>
-        <p className="text-sm text-on-surface-variant">Choisis ton niveau et sélectionne les matières que tu suis pour adapter ton emploi du temps et tes calculs de moyenne.</p>
+        <h1 className="text-[26px] leading-[34px] font-bold text-primary tracking-tight">Ton plan en 1 minute</h1>
+        <p className="text-sm text-on-surface-variant">Ta classe, tes matières, ta moyenne visée — ClassiNote calcule le reste.</p>
       </section>
 
       <section className="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant/40 shadow-card space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">1</span>
-            <h2 className="font-bold text-primary">Cycle & Classe</h2>
-          </div>
-          <span className="text-[11px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">Obligatoire</span>
+        <div className="flex items-center gap-2">
+          <span className="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">1</span>
+          <h2 className="font-bold text-primary">Ta classe</h2>
         </div>
         <div className="bg-surface-container-low p-1 rounded-xl flex items-center gap-1 border border-surface-variant/30">
           {db.onboarding.cycles.map((c) => (
@@ -161,18 +182,15 @@ export default function Onboarding() {
             </button>
           ))}
         </div>
-        <div>
-          <label className="block text-xs text-on-surface-variant mb-2">Sélectionne ta section exacte</label>
-          <div className="flex flex-wrap gap-2">
-            {classes.map((c) => c === classe ? (
-              <button key={c} className="px-3.5 py-2 rounded-xl border-2 border-secondary-container bg-primary-container text-white text-sm font-bold shadow-sm flex items-center gap-1.5">
-                <span>{c}</span>
-                <span className="material-symbols-outlined text-secondary-container text-base font-bold fill">check_circle</span>
-              </button>
-            ) : (
-              <button key={c} onClick={() => setClasse(c)} className="px-3.5 py-2 rounded-xl border border-surface-variant/60 text-sm font-semibold bg-white hover:border-primary active:scale-95">{c}</button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {classes.map((c) => c === classe ? (
+            <button key={c} className="px-3.5 py-2 rounded-xl border-2 border-secondary-container bg-primary-container text-white text-sm font-bold shadow-sm flex items-center gap-1.5">
+              <span>{c}</span>
+              <span className="material-symbols-outlined text-secondary-container text-base font-bold fill">check_circle</span>
+            </button>
+          ) : (
+            <button key={c} onClick={() => setClasse(c)} className="px-3.5 py-2 rounded-xl border border-surface-variant/60 text-sm font-semibold bg-white hover:border-primary active:scale-95">{c}</button>
+          ))}
         </div>
       </section>
 
@@ -180,21 +198,14 @@ export default function Onboarding() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">2</span>
-            <h2 className="font-bold text-primary">Sélectionne tes matières</h2>
+            <h2 className="font-bold text-primary">Tes matières</h2>
           </div>
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-secondary-fixed">{nb} matière{nb > 1 ? "s" : ""} sélectionnée{nb > 1 ? "s" : ""}</span>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-secondary-fixed">{nb} sélectionnée{nb > 1 ? "s" : ""}</span>
         </div>
-        <p className="text-xs text-on-surface-variant">Les matières officielles de ta classe se chargent toutes seules — décoche celles que tu ne suis pas, ou ajoute-en avec +.</p>
-        <div className="p-3.5 rounded-2xl bg-secondary-fixed/40 border border-secondary-container/50 space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-secondary font-bold text-lg fill">warning</span>
-            <h4 className="text-sm font-bold text-primary">Très important pour tes résultats</h4>
-          </div>
-          <p className="text-xs leading-relaxed">Ajoute bien <strong>TOUTES tes matières</strong> avec leur coefficient et ta <strong>difficulté ressentie (1 à 5)</strong> : Facile, Abordable, Moyenne, Difficile, Très difficile.</p>
-        </div>
+        <p className="text-xs text-on-surface-variant">Elles se chargent toutes seules — décoche celles que tu ne suis pas, ou ajoute-en avec +.</p>
         <div className="space-y-2.5">
           {!db.onboarding.options.length && (
-            <p className="text-xs text-on-surface-variant text-center py-4">Aucune matière pour l'instant.</p>
+            <p className="text-xs text-on-surface-variant text-center py-4">Choisis ta classe ci-dessus : tes matières arrivent.</p>
           )}
           {db.onboarding.options.map((o, i) => (
             <div key={o.id} className={`p-3.5 bg-surface-container-lowest rounded-2xl border border-surface-variant/40 shadow-card space-y-2.5 ${o.checked ? "" : "opacity-75"}`}>
@@ -207,7 +218,7 @@ export default function Onboarding() {
                   </div>
                   <div className="min-w-0">
                     <h3 className={`text-sm truncate ${o.checked ? "font-semibold text-primary" : "font-medium"}`}>{o.nom}</h3>
-                    <span className="text-[11px] text-on-surface-variant">Coef. {o.coef} • {o.groupe}</span>
+                    <span className="text-[11px] text-on-surface-variant">Coef. {o.coef}</span>
                   </div>
                 </label>
                 <div className="flex items-center gap-1 shrink-0">
@@ -223,7 +234,7 @@ export default function Onboarding() {
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-surface-variant/30">
                 <span className="text-[11px] text-on-surface-variant flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-secondary">bolt</span>Difficulté ressentie :
+                  <span className="material-symbols-outlined text-sm text-secondary">bolt</span>Difficulté :
                 </span>
                 <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((d) => (
@@ -241,18 +252,34 @@ export default function Onboarding() {
         </Link>
       </section>
 
-      <aside className="p-4 rounded-2xl bg-secondary-fixed/35 border border-secondary-container/40 flex items-start gap-3">
-        <span className="w-9 h-9 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined">lightbulb</span>
-        </span>
-        <p className="text-xs leading-relaxed"><strong>Astuce calcul :</strong> Ton coefficient servira à calculer automatiquement ta moyenne semestrielle pondérée en direct à chaque nouvelle note ajoutée.</p>
-      </aside>
+      <section className="bg-white rounded-2xl p-4 border shadow-card text-center space-y-3">
+        <div className="flex items-center gap-2 justify-center">
+          <span className="w-7 h-7 rounded-lg bg-primary-container text-white flex items-center justify-center font-bold text-xs">3</span>
+          <h2 className="font-bold text-primary">Ta moyenne visée</h2>
+        </div>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-xs font-bold">
+          <span className="material-symbols-outlined text-sm fill">flag</span><span>{b.label}</span>
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          <button onClick={() => setDial((v) => Math.max(10, v - 1))} className="w-12 h-12 rounded-xl bg-slate-100 font-bold text-2xl">−</button>
+          <div className="px-4 py-2 bg-slate-50 rounded-2xl border min-w-[150px]">
+            <span className="text-4xl font-extrabold text-primary">{fmtPlan(dial)}</span>
+            <span className="font-bold text-slate-500 ml-1.5">/ 20</span>
+          </div>
+          <button onClick={() => setDial((v) => Math.min(20, v + 1))} className="w-12 h-12 rounded-xl bg-slate-100 font-bold text-2xl">+</button>
+        </div>
+        <input type="range" min="10" max="20" step="1" value={dial} onChange={(e) => setDial(Number(e.target.value))} className="w-full" />
+        <p className="text-xs text-slate-500">{b.pct}% de chances — {b.strat}</p>
+      </section>
 
-      <div className="pb-4">
-        <button onClick={terminer} disabled={busyTerm} className={`w-full h-12 rounded-xl bg-secondary-container font-bold text-primary flex items-center justify-center gap-2 shadow ${busyTerm ? "opacity-70" : ""}`}>
-          {busyTerm ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : <>Terminer et accéder à mon tableau de bord<span className="material-symbols-outlined font-bold">arrow_forward</span></>}
+      <div className="h-24" />
+      <div className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto p-4 bg-white/95 backdrop-blur border-t z-40">
+        <button onClick={go} disabled={busyGo} className={`w-full h-12 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary flex items-center justify-center gap-2 ${busyGo ? "opacity-70" : ""}`}>
+          {busyGo ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : (<>
+            <span>Calculer mon plan de réussite</span>
+            <span className="material-symbols-outlined text-xl">arrow_forward</span>
+          </>)}
         </button>
-        <p className="text-center text-[11px] text-on-surface-variant mt-2">Tu pourras modifier ces paramètres à tout moment dans ton profil.</p>
       </div>
     </div>
   );

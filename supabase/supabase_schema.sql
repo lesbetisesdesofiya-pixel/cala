@@ -340,10 +340,10 @@ alter table profiles add column if not exists periode text default 'Trimestre 1'
 alter table profiles add column if not exists objectif_portee text default 'annuel'
   check (objectif_portee in ('annuel', 'trimestre'));
 
--- ============ CODES PROMO (1er mois à tarif réduit) ============
--- Règle : sans code = 1000 F ; code valide = montant du code (500 F).
--- Usage unique par élève et par code (promo_uses), quotas + expiration.
--- Validation côté serveur uniquement (edge functions, service_role).
+-- ============ CODES PROMO (500 F + attribution parrainage) ============
+-- Tarif unique 500 F : le code ne change plus le prix, il crédite l'affilié.
+-- Parrainage par lien : ?ref=CODE au register -> profiles.ref_code ->
+-- mf-pay rattache la souscription (best-effort, jamais bloquant).
 create table if not exists promo_codes (
   id uuid primary key default gen_random_uuid(),
   code text unique not null,
@@ -363,6 +363,8 @@ create table if not exists promo_uses (
   unique(code_id, user_id)
 );
 alter table subscriptions add column if not exists promo_code_id uuid references promo_codes(id) on delete set null;
+-- Code parrain du filleul (lien ?ref=), utilisé par mf-pay pour l'attribution.
+alter table profiles add column if not exists ref_code text;
 alter table promo_codes enable row level security;
 alter table promo_uses enable row level security;
 -- Pas de policy client : seul le service_role (fonctions mf-*) lit et écrit.

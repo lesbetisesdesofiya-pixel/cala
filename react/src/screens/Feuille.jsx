@@ -4,7 +4,7 @@ import { useApp } from "../lib/store";
 import { stashFeuille, readStashedFeuille } from "../lib/feuille";
 import { sb } from "../lib/supabase";
 import {
-  fmtPlan, moyennesParType, moyenneMatiere3Niveaux, genererFeuille, ciblePeriodeActuelle,
+  fmtPlan, moyenneMatiere3Niveaux, genererFeuille, ciblePeriodeActuelle,
   ciblesDePeriode, situationSuivi, regenRealiste, phraseReste,
   diffLabel, diffImpliquee, PLAFOND_CIBLE,
 } from "../lib/engine";
@@ -21,7 +21,7 @@ export default function Feuille() {
     abonnementActif().then((v) => { if (!stop) setIsSub(v); }).catch(() => { if (!stop) setIsSub(null); });
     return () => { stop = true; };
   }, [abonnementActif]);
-  // Tarif paywall : 1000 F/mois, 500 F le 1er mois avec un code promo.
+  // Tarif unique : 500 F/mois, sans promo.
   // Objectif de l'utilisateur (annuel ou de période selon réglage), toujours entier.
   // Le brouillon n'est repris que s'il correspond au contexte actuel
   // (même période, même portée, même objectif) : sinon, un vieux stash
@@ -62,8 +62,6 @@ export default function Feuille() {
   const refPer = ciblesDePeriode(db);
   const refTargets = refPer.hasRef ? refPer.targets : feuille;
   const suivi = situationSuivi(db, refTargets, cible);
-  const reelsParMat = {};
-  db.matieres.forEach((m) => { reelsParMat[m.id] = moyennesParType(db, m.id); });
   useEffect(() => {
     // Réécrit le brouillon AVEC son contexte (sinon la période/portée/uid étaient
     // effacées et le prochain affichage retombait sur l'objectif serveur).
@@ -192,25 +190,12 @@ export default function Feuille() {
   return (
     <div className="space-y-4 fade">
       <div className="text-center flex flex-col items-center">
-        <h1 className="font-bold text-primary">Ton Plan de Réussite</h1>
-        <span className="inline-flex items-center gap-1 mt-0.5 px-2.5 py-0.5 rounded-full bg-secondary-container/20 text-xs font-bold border border-secondary-container/30">
-          <span className="material-symbols-outlined text-[13px] text-secondary">flag</span>
-          Objectif {fmtPlan(cibleObjectif)} / 20 • {db.user.periode}
-        </span>
+        <h1 className="text-[22px] leading-7 font-extrabold text-primary tracking-tight">Voilà les notes à viser dans chaque matière pour atteindre {fmtPlan(cibleObjectif)}/20 à la fin du {db.user.regime === "Semestre" ? "semestre" : "trimestre"}</h1>
         {jRestants != null && (
           <span className="inline-flex items-center gap-1 mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-[11px] font-bold">
             J-{jRestants} avant l'échéance
           </span>
         )}
-        <div className="mt-2 flex items-center justify-center gap-2 text-xs font-bold flex-wrap">
-          <span className="px-2.5 py-1 rounded-lg bg-slate-100">Projection : {suivi.projection == null ? "—" : fmtPlan(suivi.projection)}</span>
-          <span className="px-2.5 py-1 rounded-lg bg-slate-100">Objectif : {fmtPlan(cible)}</span>
-          {per.rattrapage !== 0 && (
-            <span className="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800">Annuel {fmtPlan(cibleObjectif)} → visé : {fmtPlan(cible)}</span>
-          )}          <span className={`px-2.5 py-1 rounded-lg ${suivi.ecart == null ? "bg-slate-100" : suivi.ecart < 0 ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}`}>
-            Écart : {suivi.ecart == null ? "—" : `${suivi.ecart > 0 ? "+" : ""}${fmtPlan(suivi.ecart)}`}
-          </span>
-        </div>
       </div>
 
       <div className="flex flex-col gap-2 pt-1">
@@ -243,8 +228,7 @@ export default function Feuille() {
             : visee == null ? null
             : visee <= b0 ? 100
             : Math.max(0, Math.min(100, Math.round(((m.moyenne - b0) / (visee - b0)) * 100)));
-          const box = (ty, label, poids) => {
-            const r = (reelsParMat[m.id] || {})[ty];
+          const box = (ty, label) => {
             return (
             <div className={`bg-slate-100/70 rounded-xl p-2 text-center border flex flex-col items-center ${ty === "COMPO" ? "bg-secondary-container/15 border-secondary-container/40" : ""}`}>
               <span className={`text-[11px] ${ty === "COMPO" ? "text-secondary font-bold" : "text-slate-500 font-semibold"}`}>{label}</span>
@@ -253,27 +237,16 @@ export default function Feuille() {
                 <span className={`text-sm font-bold ${ty === "COMPO" ? "text-secondary" : "text-primary"}`}>{fmtPlan(t[ty])}</span>
                 <button onClick={() => step(m.id, ty, 1)} className="w-6 h-6 rounded-lg bg-white font-bold flex items-center justify-center text-xs shadow-sm active:scale-95">+</button>
               </div>
-              <span className="text-[10px] text-slate-500">{poids}</span>
-              <span className={`text-[10px] font-bold ${r == null ? "text-slate-400" : "text-primary"}`}>{r == null ? "À venir" : `Réel : ${fmtPlan(r)}`}</span>
             </div>
             );
           };
           return (
             <article key={m.id} className="bg-white rounded-2xl p-4 border shadow-sm">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined text-2xl">{m.icon}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-primary">{m.nom}</h3>
-                    <p className="text-xs text-slate-500">Coeff {m.coef} • <span className="font-semibold text-secondary">{diffLabel(m.difficulte)}</span></p>
-                  </div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-2xl">{m.icon}</span>
                 </div>
-                <div className="text-right bg-slate-100 px-2.5 py-1 rounded-xl border">
-                  <span className="block text-[11px] text-slate-500 font-semibold">Moyenne visée</span>
-                  <span className="font-bold text-primary">{visee == null ? "—" : fmtPlan(visee)}<span className="text-xs font-normal text-slate-500">/20</span></span>
-                </div>
+                <h3 className="font-bold text-primary">{m.nom}</h3>
               </div>
               {s && s.reel != null && (
                 <div className="mb-3 px-3 py-2 rounded-xl bg-slate-50 border text-xs space-y-1">
@@ -301,9 +274,9 @@ export default function Feuille() {
                 </div>
               )}
               <div className="grid grid-cols-3 gap-2">
-                {box("IE", "Interrogations", "25 %")}
-                {box("DS", "Devoirs / DS", "25 %")}
-                {box("COMPO", "Composition", "50 %")}
+                {box("IE", "Interro")}
+                {box("DS", "Devoir")}
+                {box("COMPO", "Compo")}
               </div>
             </article>
           );
@@ -315,13 +288,12 @@ export default function Feuille() {
       <div className="fixed bottom-16 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t">
         <div className="max-w-lg mx-auto px-4 pt-3 pb-5 flex flex-col items-center">
           {isSub === false && !hasNotes ? (
-          <div className="w-full rounded-2xl bg-primary-container text-white px-4 py-3 flex items-center gap-3">
-            <span className="material-symbols-outlined text-2xl text-secondary-container shrink-0">lock_open</span>
-            <p className="flex-1 text-sm font-bold leading-snug">Ton plan est prêt — active ton suivi</p>
-            <button onClick={save} disabled={busySave} className={`shrink-0 h-11 px-4 rounded-xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-sm flex items-center gap-1.5 active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
-              {busySave ? <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span> : (<>Activer <span className="px-1.5 py-0.5 rounded-md bg-primary text-white text-[11px] font-bold">1000 F</span></>)}
-            </button>
-          </div>
+          <button onClick={save} disabled={busySave} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
+            {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
+              <span>Je commence à suivre mes notes</span>
+              <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
+            </>)}
+          </button>
           ) : (<>
           {isSub === false && (
             jRestants != null
@@ -336,9 +308,8 @@ export default function Feuille() {
           )}
           <button onClick={save} disabled={busySave} className={`w-full h-14 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : isSub === false ? (<>
-            <span className="material-symbols-outlined text-2xl">lock_open</span>
-            <span>Activer mon suivi</span>
-            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">1000 F/mois</span>
+            <span>Je commence à suivre mes notes</span>
+            <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
             </>) : (<>
             <span className="material-symbols-outlined text-2xl">save</span>
             <span>Enregistrer</span>

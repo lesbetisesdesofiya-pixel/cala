@@ -31,7 +31,7 @@ async function handle(req: Request) {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return ok({ error: "method" }, 405);
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  const { phone, password, prenom, nom, ecole } = await req.json().catch(() => ({}));
+  const { phone, password, prenom, nom, ecole, ref } = await req.json().catch(() => ({}));
   const to = "+" + digits(phone);
   if (digits(phone).length < 9) return ok({ error: "invalid_phone" }, 400);
   if (!password || String(password).length < 8) return ok({ error: "password_required" }, 400);
@@ -49,6 +49,7 @@ async function handle(req: Request) {
   const { error: e2 } = await sb.from("profiles").insert({
     id: created.user.id, prenom: String(prenom || "Élève"), nom: String(nom || ""),
     ecole: String(ecole || ""), lycee: String(ecole || ""), phone: to,
+    ref_code: String(ref || "").trim().toUpperCase() || null,
   });
   if (e2) return ok({ error: "profile:" + e2.message }, 500);
   return ok({ email: pseudo, password: String(password) });

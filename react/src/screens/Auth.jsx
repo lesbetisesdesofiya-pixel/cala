@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { sb, SUPABASE_URL, SUPABASE_ANON_KEY, sha256Hex } from "../lib/supabase";
 import { track } from "../lib/analytics";
@@ -89,7 +89,7 @@ export function Login() {
         <Link to="/register" className="w-full h-12 rounded-xl border-2 border-primary-container text-primary font-bold text-sm flex items-center justify-center gap-2">
           Créer un compte — s'inscrire
         </Link>
-        <p className="text-center text-xs text-on-surface-variant">Nouveau ici ? Crée ton compte avec ton numéro, puis abonne-toi (1000 FCFA/mois).</p>
+        <p className="text-center text-xs text-on-surface-variant">Nouveau ici ? Crée ton compte avec ton numéro, puis abonne-toi (500 FCFA/mois).</p>
       </form>
     </div>
   );
@@ -98,6 +98,8 @@ export function Login() {
 export function Register() {
   const { reload, unlock, toast } = useApp();
   const nav = useNavigate();
+  const [params] = useSearchParams();
+  const refCode = (params.get("ref") || "").trim().toUpperCase();
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [indic, setIndic] = useState("+228");
@@ -120,7 +122,7 @@ export function Register() {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/sign-up`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY },
-        body: JSON.stringify({ phone: fullPhone, password, prenom: prenom.trim(), nom: nom.trim(), ecole: ecole.trim() }),
+        body: JSON.stringify({ phone: fullPhone, password, prenom: prenom.trim(), nom: nom.trim(), ecole: ecole.trim(), ref: refCode || undefined }),
       });
       const out = await res.json();
       if (!res.ok) {
@@ -186,6 +188,7 @@ export function Register() {
         <p className="text-sm text-on-surface-variant">Rejoins des milliers d'élèves et réussis ton année scolaire en toute sérénité.</p>
       </div>
       <form onSubmit={submit} className="mt-4 space-y-4">
+        {refCode && <p className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">Code parrain {refCode} reconnu — ton parrain gagne 250 F.</p>}
         <div className="space-y-1.5">
           <label className="text-xs font-medium text-on-surface-variant">Numéro de téléphone</label>
           <div className="flex gap-2">

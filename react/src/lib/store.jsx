@@ -23,7 +23,7 @@ export const CATEGORIES = [
   { id: "job", nom: "Petits boulots", desc: "Répétitions & cours", icon: "work_outline" },
 ];
 export const PREMIUM = {
-  prix: 1000, devise: "FCFA", periode: "/ mois",
+  prix: 500, devise: "FCFA", periode: "/ mois",
   titre: "Passe au niveau supérieur avec l'Assistant Illimité",
   soustitre: "Toutes les prévisions d'objectifs, conseils personnalisés et gestion de budget à portée de main.",
   avantages: [

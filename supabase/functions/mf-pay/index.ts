@@ -1,9 +1,9 @@
 // supabase/functions/mf-pay/index.ts
 // Initie un paiement MoneyFusion pour l'utilisateur CONNECTÉ (JWT vérifié).
-// Tarif : 1000 F par défaut ; code promo valide -> montant du code (500 F).
-// Un code fourni mais invalide est REJETÉ (on ne facture jamais 1000 F par
-// surprise à quelqu'un qui a tapé un code). La consommation du code a lieu
-// à l'activation (mf-status / mf-webhook), argent confirmé.
+// Tarif unique : 500 F/mois, avec ou sans code (plus de promo à saisir).
+// Attribution parrainage (best-effort, jamais bloquante) : code passé en
+// param OU code ref stocké au register (?ref=) -> promo_code_id sur la
+// souscription -> commissions affilié/manager à l'activation.
 // POST { phone, name, return_url, promo? } -> { url, token, amount }
 // Crée la subscription en 'pending' (ref = token MoneyFusion), puis la SPA
 // redirige vers `url` (page de paiement). Activation via mf-webhook / mf-status.
@@ -56,14 +56,23 @@ serve(async (req) => {
   }
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  // Tarif : 1000 F sauf code promo valide (montant du code, en général 500 F).
-  let amount = 1000;
+  // Tarif unique 500 F. Attribution parrain : param promo explicite, sinon
+  // code ref du profil (?ref= au register). Invalide/déjà utilisé -> on paie
+  // 500 plein sans bloquer (le parrainage ne doit jamais empêcher de payer).
+  let amount = 500;
   let promoCodeId: string | null = null;
-  if (promo && String(promo).trim()) {
-    const chk = await checkPromo(admin, promo, user.id);
-    if (!chk.valide) return ok({ error: "promo_invalide", motif: chk.motif }, 400);
-    amount = Number(chk.promo.montant) || 500;
-    promoCodeId = chk.promo.id;
+  let refCode: string | null = null;
+  try {
+    const { data: prof } = await admin.from("profiles").select("ref_code").eq("id", user.id).single();
+    refCode = prof?.ref_code || null;
+  } catch {}
+  const codeIn = (promo && String(promo).trim()) || refCode;
+  if (codeIn) {
+    const chk = await checkPromo(admin, codeIn, user.id);
+    if (chk.valide) {
+      amount = Number(chk.promo.montant) || 500;
+      promoCodeId = chk.promo.id;
+    }
   }
   const payRes = await fetch(Deno.env.get("MONEYFUSION_PAY_URL")!, {
     method: "POST",

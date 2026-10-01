@@ -118,20 +118,6 @@ export function Paywall() {
         </div>
       </section>
 
-      <section className="rounded-2xl bg-secondary-fixed/40 border border-secondary-container/40 p-4 space-y-2.5">
-        <h2 className="font-bold text-primary text-center">Pourquoi payer ?</h2>
-        {[
-          ["lightbulb", "Tes notes deviennent un plan d'action, matière par matière. Fini le stress avant chaque épreuve."],
-          ["savings", "500 F/mois — 10 à 30 fois moins cher qu'un répétiteur, pour un suivi tous les jours."],
-          ["check_circle", "Sans engagement : le service s'arrête à la fin de la période payée, sans frais cachés."],
-        ].map(([ic, tx]) => (
-          <div key={ic} className="flex items-start gap-2.5">
-            <span className="material-symbols-outlined text-secondary fill shrink-0">{ic}</span>
-            <p className="text-xs font-semibold text-primary leading-relaxed">{tx}</p>
-          </div>
-        ))}
-      </section>
-
       <Link to="/premium" className="block text-center text-xs font-bold text-primary underline">Voir le détail de l'offre →</Link>
       <form onSubmit={submit} className="bg-white rounded-2xl border p-4 space-y-3">
         <div>

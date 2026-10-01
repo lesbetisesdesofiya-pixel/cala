@@ -62,6 +62,21 @@ export default function Feuille() {
   const refPer = ciblesDePeriode(db);
   const refTargets = refPer.hasRef ? refPer.targets : feuille;
   const suivi = situationSuivi(db, refTargets, cible);
+  // Moyenne projetée du brouillon affiché : recalculée à chaque +/− sur les
+  // cibles, affichée sur le CTA ("Je veux atteindre 15,3").
+  const projeteBrouillon = (() => {
+    let pts = 0, tot = 0;
+    db.matieres.forEach((m) => {
+      const t = feuille[m.id];
+      if (!t || m.coef == null) return;
+      const moy = moyenneMatiere3Niveaux({ IE: t.IE, DS: t.DS, COMPO: t.COMPO }).moy;
+      if (moy == null) return;
+      pts += moy * m.coef;
+      tot += m.coef;
+    });
+    return tot ? Math.round((pts / tot) * 10) / 10 : null;
+  })();
+  const viseeBouton = projeteBrouillon ?? cibleObjectif;
   useEffect(() => {
     // Réécrit le brouillon AVEC son contexte (sinon la période/portée/uid étaient
     // effacées et le prochain affichage retombait sur l'objectif serveur).
@@ -291,7 +306,7 @@ export default function Feuille() {
           {isSub === false && !hasNotes ? (
           <button onClick={save} disabled={busySave} className={`w-full min-h-[3.5rem] py-3 rounded-2xl bg-gradient-to-r from-secondary-container via-[#ffc633] to-secondary-container font-extrabold text-primary text-[15px] leading-snug text-center flex items-center justify-center gap-2 shadow-xl active:scale-[0.99] ${busySave ? "opacity-70" : ""}`}>
             {busySave ? <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span> : (<>
-              <span>Je veux atteindre mes objectifs</span>
+              <span>Je veux atteindre {fmtPlan(viseeBouton)}</span>
               <span className="px-2 py-0.5 rounded-lg bg-primary text-white text-xs font-bold">500 F</span>
             </>)}
           </button>

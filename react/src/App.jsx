@@ -23,6 +23,7 @@ import AddTransaction from "./screens/AddTransaction";
 import Matiere from "./screens/Matiere";
 import { Affiliation, AffLogin, AffRegister, AffDashboard } from "./screens/Affiliation";
 import { Admin, AdminLogin } from "./screens/Admin";
+import Essai from "./screens/Essai";
 import Livres from "./screens/Livres";
 import Lecteur from "./screens/Lecteur";
 
@@ -38,6 +39,7 @@ const ONB_ALLOW = new Set([
   "/legal", "/pin", "/pin-choice", "/lock",
   "/affiliation", "/affiliation/login", "/affiliation/register", "/affiliation/dashboard",
   "/admin", "/admin/login",
+  "/essai",
 ]);
 const FREE_SANS_ABO = new Set([
   "/login", "/register", "/assistant", "/feuille-route",
@@ -45,6 +47,7 @@ const FREE_SANS_ABO = new Set([
   "/me", "/profil", // profil toujours accessible, abonné ou pas
   "/affiliation", "/affiliation/login", "/affiliation/register", "/affiliation/dashboard",
   "/admin", "/admin/login",
+  "/essai",
 ]);
 // Sans abonnement (onboarding terminé) : parcours objectif/feuille locale + paywall.
 // Tout le reste renvoie vers la feuille de route.
@@ -75,6 +78,7 @@ const BACK_TITLES = {
   "/affiliation/dashboard": ["Espace affilié", "Tableau de bord"],
   "/admin": ["Administration", "Réservé"],
   "/admin/login": ["Administration", "Connexion"],
+  "/essai": ["Essai gratuit", "Ton plan sans compte"],
 };
 
 function Guard({ children }) {
@@ -203,6 +207,7 @@ function Shell() {
             <Route path="/affiliation/login" element={<AffLogin />} />
             <Route path="/affiliation/register" element={<AffRegister />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/essai" element={<Essai />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
@@ -244,6 +249,7 @@ function Shell() {
           <Route path="/affiliation/dashboard" element={<AffDashboard />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/essai" element={<Essai />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<Navigate to="/login" replace />} />

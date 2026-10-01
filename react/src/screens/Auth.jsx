@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../lib/store";
 import { sb, SUPABASE_URL, SUPABASE_ANON_KEY, sha256Hex } from "../lib/supabase";
 import { track } from "../lib/analytics";
+import { readEssai, migrateEssai, clearEssai } from "../lib/essai";
 const INDICS = [["+228", "Togo"], ["+225", "Côte d'Ivoire"], ["+221", "Sénégal"], ["+223", "Mali"], ["+226", "Burkina"], ["+237", "Cameroun"], ["+33", "France"]];
 
 export function Login() {
@@ -136,6 +137,18 @@ export function Register() {
       await reload(uid);
       track("signup_completed", { indicatif: indic });
       unlock();
+      // Essai anonyme préalable : on migre son plan puis direction feuille.
+      const essai = readEssai();
+      if (essai) {
+        try {
+          await migrateEssai(uid, essai, reload);
+          clearEssai();
+          track("signup_after_plan", { classe: essai.classe, cible: essai.cible });
+          toast("Compte créé — ton plan est enregistré");
+          nav("/feuille-route");
+          return;
+        } catch { /* repli : parcours normal */ }
+      }
       toast("Compte créé");
       nav("/assistant");
     } catch (err) { toast("Erreur : " + err.message); } finally { setBusyReg(false); }

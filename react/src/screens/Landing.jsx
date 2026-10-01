@@ -193,7 +193,7 @@ export default function Landing() {
             <h1 className="ld-h1" data-ldhero>Ton plan pour décrocher <span className="ld-hl">ta mention<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M2 9 Q 50 2 100 7 T 198 5" stroke="#ffb702" strokeWidth="5" fill="none" strokeLinecap="round" /></svg></span></h1>
             <p className="ld-lead" data-ldhero>ClassiNote calcule la note exacte à viser dans chaque matière, suit tes résultats et te dit quoi faire avant chaque épreuve. Fini les approximations.</p>
             <div className="ld-hero-cta" data-ldhero>
-              <Link className="ld-btn ld-btn-gold ld-btn-lg" to="/register" onClick={() => track("landing_cta_clicked", { cta: "hero" })}>Créer mon plan</Link>
+              <Link className="ld-btn ld-btn-gold ld-btn-lg" to="/essai" onClick={() => track("landing_cta_clicked", { cta: "hero_essai" })}>Voir mon plan</Link>
               <button className="ld-btn ld-btn-ghost ld-btn-lg" onClick={() => go("demo")}>Voir comment ça marche</button>
             </div>
             <div className="ld-hero-proof" data-ldhero>
